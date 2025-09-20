@@ -1,0 +1,75 @@
+INFO:root:SAPyLib imported successfully.
+INFO:root:Contents of lib directory: ['SAPyLib.py', '__init__.py', '__pycache__']
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
+WARNING:lib.SAPyLib:Execution: undone.
+DEBUG:lib.SAPyLib:Get the MPStep messages.
+INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
+WARNING:lib.SAPyLib:Execution: undone.
+DEBUG:lib.SAPyLib:Get the MPStep messages.
+INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
+INFO:root:SAPyLib imported successfully.
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
+WARNING:lib.SAPyLib:Execution: undone.
+DEBUG:lib.SAPyLib:Get the MPStep messages.
+INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Make a Point Name Ref List From a Group
+WARNING:lib.SAPyLib:getResult --> Make a Point Name Ref List From a Group: False, 0
+WARNING:lib.SAPyLib:Execution: undone.
+DEBUG:lib.SAPyLib:Get the MPStep messages.
+INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
+INFO:root:SAPyLib imported successfully.
+INFO:root:SAPyLib imported successfully.
+INFO:root:SAPyLib imported successfully.
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+INFO:root:SAPyLib imported successfully.
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
+INFO:root:SAPyLib imported successfully.
+DEBUG:lib.SAPyLib:Set Interaction Mode
+INFO:__main__:Program completed!
