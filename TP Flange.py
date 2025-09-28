@@ -1,9 +1,10 @@
 import sys
 import os
 import logging
+from platform import system
 
 # Base path to the SDK Lib
-BASE_PATH = r"C:\Users\Andrey Ocheretianko\PycharmProjects\SA Automation"
+BASE_PATH = r'C:\Users\AndreyOcheretianko\PycharmProjects\SA-SDK-Projects'
 LOG_FILE = os.path.join(BASE_PATH, "sa_sdk_log.txt")
 
 # Add the directory containing SAPyLib.py to the path and setting up logging
@@ -32,15 +33,12 @@ console.setFormatter(logging.Formatter("%(name)-8s - %(levelname)-8s - %(message
 logging.getLogger("").addHandler(console)
 log = logging.getLogger(__name__)
 
-sa.open_sa_file(r"C:\Users\Andrey Ocheretianko\Desktop\default 2025.09.20 13.40.xit64")
+# sa.open_sa_file(r"C:\Users\AndreyOcheretianko\Desktop\default 2025.09.20 13.40.xit64")
+# sa.set_sa_window_state('Show')
 
-# Set the SA interaction mode
-sa.set_interaction_mode(sa_interaction_mode="Silent",
-                        mp_interaction_mode="Never Halt",
-                        mp_dialog_interaction_mode="Block Application Interaction")
 
-sa.run_subroutine(path="C:\\Users\\Andrey Ocheretianko\\Desktop\\test_plane.mp",
-                  share_var=False)
+bcd_subprocess = sa.run_subroutine(path="C:\\Users\\AndreyOcheretianko\\Desktop\\test.mp",
+                                   share_var=False)
 
 # Exit the program and resource release
 log.info("Program completed!")

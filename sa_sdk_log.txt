@@ -1,75 +1,17 @@
+2025-09-27 21:27:49,031 - root     - INFO - SAPyLib imported successfully.
+2025-09-27 21:28:55,271 - root     - INFO - SAPyLib imported successfully.
 INFO:root:SAPyLib imported successfully.
-INFO:root:Contents of lib directory: ['SAPyLib.py', '__init__.py', '__pycache__']
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
-WARNING:lib.SAPyLib:Execution: undone.
+ERROR:lib.SAPyLib:getResult --> ERROR: Run Subroutine: True, 3
+ERROR:lib.SAPyLib:Execution: FAILED!
 DEBUG:lib.SAPyLib:Get the MPStep messages.
-INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
-INFO:root:SAPyLib imported successfully.
+ERROR:lib.SAPyLib:Getting MP Step failed with error:  (0x0000F108): Internal application error.
+   at System.RuntimeType.ForwardCallToInvokeMember(String memberName, BindingFlags flags, Object target, Int32[] aWrapperTypes, MessageData& msgData)
+   at SpatialAnalyzerSDK.SpatialAnalyzerSDKClass.GetMPStepMessages(Object& vArray)
 INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
-WARNING:lib.SAPyLib:Execution: undone.
-DEBUG:lib.SAPyLib:Get the MPStep messages.
-INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
-INFO:root:SAPyLib imported successfully.
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-WARNING:lib.SAPyLib:getResult --> Set Interaction Mode: False, 0
-WARNING:lib.SAPyLib:Execution: undone.
-DEBUG:lib.SAPyLib:Get the MPStep messages.
-INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Make a Point Name Ref List From a Group
-WARNING:lib.SAPyLib:getResult --> Make a Point Name Ref List From a Group: False, 0
-WARNING:lib.SAPyLib:Execution: undone.
-DEBUG:lib.SAPyLib:Get the MPStep messages.
-INFO:lib.SAPyLib:MPStepMessage: 'NO MESSAGES'
-INFO:root:SAPyLib imported successfully.
-INFO:root:SAPyLib imported successfully.
-INFO:root:SAPyLib imported successfully.
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-INFO:root:SAPyLib imported successfully.
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
-INFO:root:SAPyLib imported successfully.
-DEBUG:lib.SAPyLib:Set Interaction Mode
-INFO:__main__:Program completed!
+2025-09-27 21:35:55,469 - root     - INFO - SAPyLib imported successfully.
+2025-09-28 12:56:50,693 - __main__ - INFO - Program completed!
+2025-09-28 13:37:24,370 - __main__ - INFO - Program completed!
+2025-09-28 13:47:20,732 - __main__ - INFO - Program completed!
+2025-09-28 13:48:35,199 - __main__ - INFO - Program completed!
+2025-09-28 13:49:35,025 - __main__ - INFO - Program completed!
+2025-09-28 13:53:37,388 - __main__ - INFO - Program completed!

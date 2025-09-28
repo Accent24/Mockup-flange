@@ -37,7 +37,7 @@ from System.Collections.Generic import List
 import System.Reflection
 
 
-BASE_PATH = r"C:\Users\Andrey Ocheretianko\PycharmProjects\SA Automation"
+BASE_PATH = r'C:\Users\AndreyOcheretianko\PycharmProjects\SA-SDK-Projects'
 DLL_FOLDER = os.path.join(BASE_PATH, "dll")
 
 # Get the logger
@@ -462,6 +462,12 @@ def center_graphics_about_objects(objtype: str = "Any", ColWild: str = "*", ObjW
     NrkSdk.ExecuteStep()
     getResult(func_name)
 
+def set_sa_window_state(state: str = "Show, Hide, Maximize, Minimize"):
+    # p.230
+    func_name = "Set SA's Window State"
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetWindowStateArg("SA Window State", state)
+    NrkSdk.ExecuteStep()
 
 # ######################################
 # Chapter 6 - Cloud Viewer Operations ##
@@ -3314,6 +3320,8 @@ def run_subroutine(path: str, share_var):
     NrkSdk.SetBoolArg("Share Parent Variables?", share_var)
 
     NrkSdk.ExecuteStep()
+
+    return getResult(func_name)
 
 # #########################
 # Chapter 19 - Variables ##
