@@ -48,11 +48,6 @@ sa_sdk_dll_file = os.path.join(DLL_FOLDER, "Interop.SpatialAnalyzerSDK.dll")
 sa_sdk_dll = System.Reflection.Assembly.LoadFile(sa_sdk_dll_file)
 sa_sdk_class_type = sa_sdk_dll.GetType("SpatialAnalyzerSDK.SpatialAnalyzerSDKClass")
 NrkSdk = System.Activator.CreateInstance(sa_sdk_class_type)
-SDK_Err_Code = 0
-SAConnected = NrkSdk.ConnectEx("127.0.0.1", SDK_Err_Code)
-if not SAConnected and SDK_Err_Code != 0:
-    print(f"Error code: {SDK_Err_Code}")
-    raise IOError("Connection to SA SDK failed!")
 
 # Get SA Python Tools dll
 sa_py_tools_dll_file = os.path.join(DLL_FOLDER, "SA_Python_Tools.dll")
@@ -60,10 +55,21 @@ sa_py_tools_dll = System.Reflection.Assembly.LoadFile(sa_py_tools_dll_file)
 sa_py_tools_class_type = sa_py_tools_dll.GetType("SA_Python_Tools.SA_Py_Tool")
 sa_py_tools = System.Activator.CreateInstance(sa_py_tools_class_type)
 
+# SA Connection function
+def connect_to_sa():
+    SDK_Err_Code = 0
+    SAConnected = NrkSdk.ConnectEx("127.0.0.1", SDK_Err_Code)
+    if not SAConnected and SDK_Err_Code != 0:
+        print(f"Error code: {SDK_Err_Code}")
+        raise IOError("Connection to SA SDK failed!")
+
+
+# Establish connection
+# Uncomment this line if your App doesn't check SA instance and run it automatically
+# connect_to_sa()
 
 # Get the logger
 log = logging.getLogger(__name__)
-
 
 # ###############
 # Base methods ##
@@ -90,6 +96,7 @@ def getResult(func_name: str) -> bool:
         log.warning("Execution: undone.")
         MPStepMessages()
         raise SystemError("Execution raised: UNDONE!")
+
     elif result == 1:
         # INPROGRESS = 1
         log.info(f"{func_name}: {boolean}, {result}")
@@ -280,6 +287,23 @@ def find_files_in_directory(directory: str, searchPattern: str) -> list:
         return []
 
 
+def load_dataShare_file(file_path: str = 'path to the data share file',
+                        make_var: bool = 'read and add a new variables'):
+    func_name = 'Load DataShare File'
+    NrkSdk.SetStep(func_name)
+
+    NrkSdk.SetFilePathArg('DataShare File Path', file_path, False)
+    NrkSdk.SetBoolArg('Make Variables?', make_var)
+
+    NrkSdk.ExecuteStep()
+    getResult_Bare(func_name)
+
+
+def exit_measurement_plan():
+    func_name = 'Exit Measurement Plan'
+    NrkSdk.SetStep(func_name)
+    NrkSdk.ExecuteStep()
+
 # ######################################
 # Chapter 3 - Process Flow Operations ##
 # ######################################
@@ -468,6 +492,26 @@ def set_sa_window_state(state: str = "Show, Hide, Maximize, Minimize"):
     NrkSdk.SetStep(func_name)
     NrkSdk.SetWindowStateArg("SA Window State", state)
     NrkSdk.ExecuteStep()
+
+
+def load_html_from_in_edge_browse(form_path: str = 'path to the form',
+                                  input_path: str = 'path to the input data share file',
+                                  output_path: str = 'path to the output data share file',
+                                  win_width: int = 'width of the form window',
+                                  win_height: int = 'height of the form window'):
+
+    func_name = 'Load HTML Form in Edge Browser'
+    NrkSdk.SetStep(func_name)
+
+    NrkSdk.SetFilePathArg('Input HTML Form Path', form_path, False)
+    NrkSdk.SetIntegerArg('Window Width', win_width)
+    NrkSdk.SetIntegerArg('Window Height', win_height)
+    NrkSdk.SetFilePathArg('Input DataShare File Path', input_path, False)
+    NrkSdk.SetFilePathArg('Output DataShare File Path', output_path, False)
+    NrkSdk.SetBoolArg('Save in Binary Format?', False)
+
+    NrkSdk.ExecuteStep()
+    getResult(func_name)
 
 # ######################################
 # Chapter 6 - Cloud Viewer Operations ##

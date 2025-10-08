@@ -1,0 +1,56 @@
+<header>
+  <title>Log form station 1</title>
+  <link rel="stylesheet" href="./index.css" />
+  <meta http-equiv="x-ua-compatible" content="IE=edge" />
+</header>
+
+<body>
+  <div class="content">
+    <h1>Work station 1 fill in form</h1>
+    <form id="myForm">
+      <table>
+        <tr>
+          <td>
+            <label for="I1">Work order number</label>
+          </td>
+          <td>
+            <input class="user_input" type="number" id="I1" name="work_order" value="" placeholder="WO # 23455" required />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="I1">Date and time</label>
+          </td>
+          <td>
+            <input class="user_input" id="I1" type="datetime-local" name="date" value="" required />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="I1">Steel temperature</label>
+          </td>
+          <td>
+            <input class="user_input" id="I1" type="number" name="temp" value="" placeholder="eg. 25" required />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="S3">Inspector</label>
+          </td>
+          <td>
+            <input class="user_input" id="S3" type="text" name="operator" value="" placeholder="eg. Andrey Ocheretianko" required />
+          </td>
+        </tr>
+      </table>
+    </form>
+    <div class="control">
+      <button class="buttonSave control" id="submit" type="button">
+        Submit
+      </button>
+      <button class="buttonCancel control" id="cancel" type="button">
+        Cancel
+      </button>
+    </div>
+  </div>
+  <script src="./java_s.js"></script>
+</body>
