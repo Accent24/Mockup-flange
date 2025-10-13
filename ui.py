@@ -6,7 +6,7 @@ import logging
 
 from PIL.EpsImagePlugin import field
 
-# from lib import SAPyLib as sa
+from lib import SAPyLib as sa
 import threading
 import pyautogui
 

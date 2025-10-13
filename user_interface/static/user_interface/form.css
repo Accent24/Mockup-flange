@@ -1,0 +1,44 @@
+.col img {
+    width: 300px;
+}
+
+.container-flex {
+    height: 80vh;
+    display: flex;
+
+}
+
+.row {
+    width: 100%;
+}
+
+#in-form {
+    display: flex;
+    justify-content: center;
+}
+
+ul {
+    padding-left: 0px;
+    list-style: none;
+}
+
+form {
+    width: 70%;
+}
+li {
+    font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#submit {
+    padding: 20px;
+    margin: 20px;
+    margin-bottom: 0px;
+
+    font-size: 20px;
+
+    width: 10vw;
+    background-color: #EAEAEA;
+}

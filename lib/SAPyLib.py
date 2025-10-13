@@ -60,8 +60,9 @@ def connect_to_sa():
     SDK_Err_Code = 0
     SAConnected = NrkSdk.ConnectEx("127.0.0.1", SDK_Err_Code)
     if not SAConnected and SDK_Err_Code != 0:
-        print(f"Error code: {SDK_Err_Code}")
-        raise IOError("Connection to SA SDK failed!")
+        return False, f"Error code: {SDK_Err_Code}"
+    else:
+        return SAConnected
 
 
 # Establish connection
