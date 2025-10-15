@@ -1,5 +1,7 @@
 body {
     background-color: #EAEAEA;
+    height: 100vh;
+    margin: 0px;
 }
 
 .navbar {
@@ -27,6 +29,8 @@ body {
 .nav-buttons span {
     padding: 5px;
     white-space: nowrap;
+    font-size: 20px;
+    color: blue;
 }
 
 .nav-buttons a img {
@@ -34,3 +38,6 @@ body {
     padding: 5px;
 }
 
+h2 {
+    margin-bottom: 2px;
+}

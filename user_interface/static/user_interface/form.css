@@ -1,4 +1,4 @@
-.col img {
+.picture img {
     width: 300px;
 }
 
@@ -25,6 +25,7 @@ ul {
 form {
     width: 70%;
 }
+
 li {
     font-size: 22px;
     display: flex;
@@ -32,13 +33,29 @@ li {
     margin-top: 20px;
 }
 
-#submit {
-    padding: 20px;
-    margin: 20px;
-    margin-bottom: 0px;
+button {
+    background: none;
+    border: none;
 
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+
+    width: 100%;
+}
+
+button img {
+    margin-top: 15px;
+    margin-bottom: 5px;
+
+    width: 64px;
+}
+
+span {
     font-size: 20px;
 
-    width: 10vw;
-    background-color: #EAEAEA;
+    color: blue;
+
+    padding: 5px;
 }

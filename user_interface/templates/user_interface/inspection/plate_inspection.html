@@ -1,0 +1,14 @@
+{% extends "user_interface/base.html" %}
+
+{% load static %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'user_interface/inspection/plate_inspection.css' %}">
+<link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main class="content">
+
+    </main>
+{% include 'user_interface/footer.html' %}
+{% endblock %}

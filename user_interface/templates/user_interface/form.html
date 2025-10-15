@@ -13,10 +13,13 @@
                 <ul>
                 {{ form.as_ul }}
                 </ul>
-                <input type="submit" value="Next" id="submit">
+                <button type="submit">
+                    <img src="{% static 'icons/right.png' %}">
+                    <span>Save and proceed</span>
+                </button>
             </form>
         </div>
-        <div class="col">
+        <div class="col picture">
             <img src="{% static 'icons/registration.png' %}">
         </div>
       </div>

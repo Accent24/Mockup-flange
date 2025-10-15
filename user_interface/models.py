@@ -1,9 +1,9 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.urls import reverse_lazy
+from datetime import datetime
 
 
-# Create your models here.
 class MainFunction(models.Model):
     name = models.CharField(blank=False, max_length=200)
     view_name = models.CharField(blank=False, max_length=200)
@@ -27,13 +27,27 @@ class FillForm(models.Model):
     steel_temperature = models.IntegerField(blank=False, verbose_name='Steel temperature')
     fabrication_stage = models.CharField(max_length=200, blank=False, verbose_name='Fabrication stage')
     file_path = models.CharField(max_length=250, blank=False)
-    station_name = models.CharField(max_length=250, blank=False)
+    station_name = models.ForeignKey(MainFunction, on_delete=models.CASCADE, verbose_name='Station name')
 
 
     def __str__(self):
-        name = '{0} - {1} - {2}'.format(self.station_name, self.report_number, self.date_time)
+        name = '{0} - {1} - {2}'.format(self.station_name, self.report_number,
+                                        self.date_time.strftime('%d.%m.%Y %H:%M'))
         return name
 
 
     def get_absolute_url(self):
-        return reverse(self.station_name, kwargs={'form_pk': self.pk})
+        return reverse_lazy(self.station_name.view_name, kwargs={'pk': self.pk})
+
+
+class ProjectTolerance(models.Model):
+    dimension_name = models.CharField(max_length=100, blank=False, verbose_name='Dimension reference name')
+    tolerance_upper = models.FloatField(blank=False, verbose_name='Tolerance value - Upper', default=0)
+    tolerance_lower = models.FloatField(blank=False, verbose_name='Tolerance value - Lower', default=0)
+
+    station_name = models.ForeignKey(MainFunction, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return '{0} - {1} - +{2}/{3}'.format(self.station_name.name, self.dimension_name, self.tolerance_upper,
+                                              self.tolerance_lower)

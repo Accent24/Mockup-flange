@@ -19,23 +19,25 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <div class="nav-buttons nav-link active">
+                <span>Main menu: </span>
                 <a class="" aria-current="page" href="{% url 'home' %}">
                     <img src="{% static 'icons/building.png' %}">
                 </a>
             </div>
             <div class="nav-buttons nav-link active">
-                <span><h2>SDK connection: </h2></span>
+                <span>SDK connection: </span>
                 <a aria-current="page" href="{% url 'start_sdk' %}">
                     <img class="sdk_status" src="{% static 'icons/check.png' %}">
                 </a>
             </div>
             <div class="nav-buttons nav-link active">
-                <span><h2>Device connection: </h2></span>
+                <span>Device connection: </span>
                 <a class="" aria-current="page" href="#">
-                    <img src="{% static 'icons/check.png' %}">
+                    <img src="{% static 'icons/mark.png' %}">
                 </a>
             </div>
             <div class="nav-buttons nav-link active">
+                <span>Close app: </span>
                 <a class="" aria-current="page" href="{% url 'exit' %}">
                     <img src="{% static 'icons/power.png' %}">
                 </a>
@@ -45,7 +47,6 @@
       </div>
     </nav>
 {% block content %}
-<!--  Here goes your body-->
 {% endblock %}
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'js/base.js' %}"></script>

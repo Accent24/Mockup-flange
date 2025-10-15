@@ -1,0 +1,34 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+
+    padding: 0px;
+    font-size: 20px;
+    margin: 5px;
+}
+
+.footer-button a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+
+    size: 20px;
+    color: blue;
+
+    padding: 5px;
+}
+
+.footer-button a img {
+    width: 64px;
+}

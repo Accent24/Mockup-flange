@@ -11,7 +11,7 @@
         <div class="col">
           <div class="function">
               {% if function.view_name %}
-              <a href="{% url 'fill_form' station=function.view_name %}">{{ function.name }}</a>
+              <a href="{% url 'fill_form' pk=function.pk %}">{{ function.name }}</a>
               {% else %}
               <a href="">{{ function.name }}</a>
               {% endif %}

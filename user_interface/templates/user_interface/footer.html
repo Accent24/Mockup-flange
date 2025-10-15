@@ -1,0 +1,21 @@
+    {% load static %}
+    <footer class="footer">
+        <div class="edit-view footer-button">
+            <a href="{% url 'fill_form_update' pk=form_pk %}">
+                <img src="{% static 'icons/list-option.png' %}">
+                <span>Edit inspection form</span>
+            </a>
+        </div>
+        <div class="start footer-button">
+            <a href="">
+                <img src="{% static 'icons/play.png' %}">
+                <span>Start inspection</span>
+            </a>
+        </div>
+        <div class="finish footer-button">
+            <a href="">
+                <img src="{% static 'icons/documents.png' %}">
+                <span>Generate report</span>
+            </a>
+        </div>
+    </footer>

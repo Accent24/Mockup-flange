@@ -4,6 +4,7 @@ from lib import SAPyLib as sa
 import pyautogui
 import os
 from pyWinActivate import win_activate
+import json
 
 
 def check_for_sa_instance():
