@@ -4,7 +4,6 @@ from lib.SAPyLib import connect_to_sa
 from .models import MainFunction, FillForm, ProjectTolerance
 from .sa_functions import *
 from django.core import serializers
-import json
 
 
 # Start SA Sdk and connect
@@ -21,6 +20,17 @@ def start_sdk(request):
 def test_sdk(request):
     connection = connect_to_sa()
     return HttpResponse(connection[0])
+
+
+def load_and_start(request, template_name):
+    # message = open_template_check_connection(template_name)
+
+    return HttpResponse(True)
+
+def measure(request, collection, group, name, target_type):
+    message = measure_pt(collection, group, name, target_type)
+
+    return HttpResponse(message)
 
 
 class HomePage(ListView):
@@ -66,6 +76,13 @@ def plate_inspection(request, pk):
                                       ProjectTolerance.objects.filter(station_name_id=form_object.station_name.pk))
 
     return render(request, template_name='user_interface/inspection/plate_inspection.html',
+                  context={'form_pk': pk})
+
+
+def flange_inspection(request, pk):
+    # open_template(r"C:\Users\AndreyOcheretianko\Desktop\Lamprell\flange inspection.xit64")
+
+    return render(request, template_name='user_interface/inspection/flange_inspection.html',
                   context={'form_pk': pk})
 
 

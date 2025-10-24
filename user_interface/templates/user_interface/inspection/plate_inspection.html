@@ -8,7 +8,32 @@
 
 {% block content %}
     <main class="content">
-
+    <h1>Plate inspection program</h1>
+    <div class="container-flex text-center">
+      <div class="row align-items-start">
+        <div class="col">
+          <h2>Inspection flow</h2>
+          <ul>
+              <li class="connection">
+                  <div hidden class="spinner-border" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                  </div>Instrument connection
+              </li>
+              <li>Measure point A for rough alignment</li>
+              <li>Measure point B for rough alignment</li>
+              <li>Automatic alignment. Stand by...</li>
+              <li>Measure A-side of the plate</li>
+              <li>Measure B-side of the plate</li>
+              <li>Measure C-side of the plate</li>
+              <li>Measure D-side of the plate</li>
+              <li>Inspection complete. Verify results!</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2>Quick result overview</h2>
+        </div>
+      </div>
+    </div>
     </main>
 {% include 'user_interface/footer.html' %}
 {% endblock %}

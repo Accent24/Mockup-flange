@@ -251,9 +251,10 @@ def open_sa_file(path: str) -> str:
     func_name = "Open SA File"
 
     NrkSdk.SetStep(func_name)
-    NrkSdk.SetStringArg("SA File Name", path)
-
+    NrkSdk.SetFilePathArg("SA File Name", path, False)
     NrkSdk.ExecuteStep()
+
+    return getResult(func_name)
 
 
 def save():
@@ -2890,7 +2891,6 @@ def start_instrument_interface(collection_inst: str, id_inst: int, initialize: b
     NrkSdk.SetBoolArg("Run in Simulation", simulation)
     NrkSdk.SetBoolArg("Allow Start w/o Init Requirements", True)
     NrkSdk.ExecuteStep()
-    getResult(func_name)
 
 
 def stop_instrument_interface(collection_inst: str, id_inst: int) -> None:
@@ -2906,13 +2906,12 @@ def stop_instrument_interface(collection_inst: str, id_inst: int) -> None:
 def verify_instrument_connection(collection_inst: str, id_inst: int) -> bool:
     """p955"""
     func_name = "Verify Instrument Connection"
-    log.debug(func_name)
     NrkSdk.SetStep(func_name)
     NrkSdk.SetColInstIdArg("Instrument's ID", collection_inst, id_inst)
     NrkSdk.ExecuteStep()
-    getResult(func_name)
+
     bValue = NrkSdk.GetBoolArg("Connected?", False)
-    log.debug(f"Tracker Connection info: {bValue[1]}")
+
     if not bValue[0]:
         return False
     return bValue[1]

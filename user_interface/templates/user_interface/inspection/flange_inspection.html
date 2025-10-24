@@ -1,0 +1,73 @@
+{% extends "user_interface/base.html" %}
+
+{% load static %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'user_interface/inspection/flange_inspection.css' %}">
+<link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main class="content">
+    <h1>Flange inspection program</h1>
+    <div class="container-flex text-center">
+      <div class="row align-items-start">
+        <div class="col">
+          <h2>Inspection flow</h2>
+          <ul>
+              <li id="connection">
+                  <span>Instrument connection</span>
+              </li>
+              <li id="point-a">
+                  <span>Measure point A for rough alignment</span>
+                  <div id="description-a" hidden>
+                      <p>Guide laser to point A, click on it in the laser tracker view window. Click Measure button once ready</p>
+                      <button id="measure-a">Measure</button>
+                  </div>
+              </li>
+              <li>Measure point B for rough alignment</li>
+              <li>Automatic alignment. Stand by...</li>
+              <li>Measure A-side of the plate</li>
+              <li>Measure B-side of the plate</li>
+              <li>Measure C-side of the plate</li>
+              <li>Measure D-side of the plate</li>
+              <li>Inspection complete. Verify results!</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2>Quick result overview</h2>
+        </div>
+      </div>
+    </div>
+    </main>
+
+{% include 'user_interface/footer.html' %}
+    <script>
+      const button = $("#start");
+      button.on("click", function(e) {
+        e.preventDefault();
+
+        $("#start img").attr("src", "{% static 'icons/stop.png' %}");
+        $("#start span").text("Stop inspection")
+        <!--  open template and start instrument  -->
+        $.get(url="{% url 'load_and_start' template_name='flange inspection' %}", success=function(data) {
+            var result = data;
+            var img_selection = $("img.instrument-connection");
+
+            if (result === 'True') {
+                img_selection.attr("src", "{% static 'icons/check.png' %}");
+                $('#connection').attr('class', 'complete');
+                $('#description-a').attr('hidden', false);
+                } else {
+                img_selection.attr("src", "{% static 'icons/mark.png' %}");
+                };
+            });
+        <!--    measure pt A        -->
+        $('#measure-a').on('click', function(e) {
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='A' target_type='smr' %}", success=function(data) {
+                $('#description-a').attr('hidden', true);
+                $('#point-a').attr('class', 'complete');
+                });
+            });
+      });
+    </script>
+{% endblock %}
