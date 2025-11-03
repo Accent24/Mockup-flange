@@ -32,3 +32,14 @@ main {
 .footer-button a img {
     width: 64px;
 }
+
+.flow {
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    max-height: 65vh;
+}
+
+.flow::-webkit-scrollbar {
+    display: none;
+}

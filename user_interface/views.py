@@ -1,5 +1,9 @@
+import json
+
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect, HttpResponse, reverse
+from pyexpat.errors import messages
+
 from lib.SAPyLib import connect_to_sa
 from .models import MainFunction, FillForm, ProjectTolerance
 from .sa_functions import *
@@ -23,12 +27,42 @@ def test_sdk(request):
 
 
 def load_and_start(request, template_name):
-    # message = open_template_check_connection(template_name)
+    message = open_template_check_connection(template_name)
 
-    return HttpResponse(True)
+    return HttpResponse(message)
 
 def measure(request, collection, group, name, target_type):
     message = measure_pt(collection, group, name, target_type)
+
+    return HttpResponse(message)
+
+
+def ovc(request):
+    message = sa.instrument_operational_check(collection_inst='', id_inst=0, check_type='Camera View')
+
+    return HttpResponse(message)
+
+
+def ovc_close(request):
+    message = sa.instrument_operational_check(collection_inst='', id_inst=0, check_type='Close Camera View')
+
+    return HttpResponse(message)
+
+
+def rough_alignment(request):
+    message = sa.run_subroutine('template::rough alignment.mp', False, True)
+
+    return HttpResponse(message)
+
+
+def automatic_alignment(request):
+    message = sa.run_subroutine('template::automatic alignment.mp', False, True)
+
+    return HttpResponse(message)
+
+
+def inspection(request):
+    message = sa.run_subroutine('template::inspection.mp', False, True)
 
     return HttpResponse(message)
 
@@ -80,8 +114,6 @@ def plate_inspection(request, pk):
 
 
 def flange_inspection(request, pk):
-    # open_template(r"C:\Users\AndreyOcheretianko\Desktop\Lamprell\flange inspection.xit64")
-
     return render(request, template_name='user_interface/inspection/flange_inspection.html',
                   context={'form_pk': pk})
 
@@ -98,3 +130,12 @@ class CanInspection(TemplateView):
 class FlangeInspection(TemplateView):
     ...
 
+
+def test(request):
+    result = sa.run_subroutine('Template::test.mp', False, True, {'a': 'float',
+                                                                                              'b': 'float',
+                                                                                              'c': 'float',
+                                                                                              'd': 'float',
+                                                                                              'e': 'float'})
+
+    return HttpResponse(json.dumps({'result': result[0], 'dimensions': result[1]}))

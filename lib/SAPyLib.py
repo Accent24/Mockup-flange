@@ -3354,16 +3354,28 @@ def set_interaction_mode(sa_interaction_mode: str, mp_interaction_mode: str, mp_
 # ###############################
 # Chapter 18 - RMP Subroutines ##
 # ###############################
-def run_subroutine(path: str, share_var):
+def run_subroutine(path: str, share_var, embedded, expected_return: dict = None):
     # p29 Opens SA file
     func_name = "Run Subroutine"
 
     NrkSdk.SetStep(func_name)
 
-    NrkSdk.SetFilePathArg("MP Subroutine File Path", path, False)
+    NrkSdk.SetFilePathArg("MP Subroutine File Path", path, embedded)
     NrkSdk.SetBoolArg("Share Parent Variables?", share_var)
 
     NrkSdk.ExecuteStep()
+
+    if expected_return:
+        values_to_return = dict()
+        for k, v in expected_return.items():
+            if v == 'str':
+                values_to_return[k] = NrkSdk.GetStringArg(k, 0)[1]
+            elif v == 'int':
+                values_to_return[k] = NrkSdk.GetIntegerArg(k, 0)[1]
+            elif v == 'float':
+                values_to_return[k] = NrkSdk.GetDoubleArg(k, 0)[1]
+
+        return getResult(func_name), values_to_return
 
     return getResult(func_name)
 

@@ -3,6 +3,11 @@ from .views import *
 
 
 urlpatterns = [
+    path('api/rough_alignment/', rough_alignment, name='rough_alignment'),
+    path('api/automatic_alignment/', automatic_alignment, name='auto_alignment'),
+    path('api/automatic_measurement/', inspection, name='auto_inspection'),
+    path('api/close_camera_window/', ovc_close, name='close_ovc'),
+    path('api/camera_window/', ovc, name='ovc'),
     path('api/measure/<str:collection>/<str:group>/<str:name>/<str:target_type>/', measure, name='measure_target'),
     path('api/template_and_connection/<str:template_name>/', load_and_start, name='load_and_start'),
     path('api/sdk_test/', test_sdk, name='api_sdk_test'),
@@ -13,4 +18,5 @@ urlpatterns = [
     path('home/', HomePage.as_view(), name='home'),
     path('inspection/plate_inspection/<int:pk>/', plate_inspection, name='plate_inspection'),
     path('inspection/flange_inspection/<int:pk>/', flange_inspection, name='flange_inspection'),
-    ]
+    path('test/', test, name='test'),
+]

@@ -1,8 +1,9 @@
 body {
     background-color: #EAEAEA;
-    height: 99vh;
-    width: 99vw;
     margin: 0px;
+
+    height: 100vh;
+    overflow: hidden;
 }
 
 .navbar {

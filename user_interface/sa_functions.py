@@ -48,6 +48,7 @@ def measure_pt(collection, group, name, target_type):
     else:
         target_type = 'Set Targ Retro: Surface'
 
+    sa.instrument_operational_check(collection_inst=collection, id_inst=0, check_type='ADM Reset')
     sa.instrument_operational_check(collection_inst=collection, id_inst=0, check_type=target_type)
     result = sa.configure_and_measure(collection_inst=collection, id_inst=0,
                                        collection_target=collection, group_target=group, name_target=name,
@@ -55,10 +56,6 @@ def measure_pt(collection, group, name, target_type):
                                        timeout_in_secs=0.0)
 
     return result
-
-
-def sa_plate_inspection():
-    sa.run_subroutine(r'C:\Users\AndreyOcheretianko\Desktop\Lamprell\send request.mp', False)
 
 
 def close_app():

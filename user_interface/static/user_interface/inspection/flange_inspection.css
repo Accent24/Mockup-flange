@@ -18,19 +18,22 @@ ul li {
     text-align: left;
 
 
-    padding: 5px;
+    padding: 8px;
     margin: 5px;
 
     border: solid;
     border-left: none;
     border-top: none;
     border-right: none;
+    border-radius: 15px;
 
     border-width: 1px;
+
 }
 
 .complete {
     text-decoration: line-through;
+    background-color: #0FFC5390;
 
 }
 
@@ -40,12 +43,45 @@ ul li {
     --bs-spinner-height: 1.5rem;
 }
 
-#description-a {
+.description {
     padding: 5px;
     display: flex;
     flex-direction: column;
 
     text-align: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 22px;
+
+    border: solid;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+
+    border-width: 1px;
+    border-radius: 15px;
+}
+
+li button {
+    background: none;
+    border: none;
+}
+
+.overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.overview img {
+    max-width: 600px;
+    width: 70vh;
+}
+
+.table {
+    font-size: 15px;
+    width: 80%;
+}
+
+.table>:not(caption)>*>* {
+    padding: 5px; !important
 }

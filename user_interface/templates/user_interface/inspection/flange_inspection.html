@@ -13,28 +13,120 @@
       <div class="row align-items-start">
         <div class="col">
           <h2>Inspection flow</h2>
-          <ul>
-              <li id="connection">
-                  <span>Instrument connection</span>
+          <ul class="flow">
+              <li id="instrument-connection">
+                  <span>Load template and start</span>
+                  <div id="description-temp"  class="description" hidden>
+                      <p>Loading template file and connecting to the instrument.</p>
+                      <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
               </li>
               <li id="point-a">
                   <span>Measure point A for rough alignment</span>
-                  <div id="description-a" hidden>
-                      <p>Guide laser to point A, click on it in the laser tracker view window. Click Measure button once ready</p>
-                      <button id="measure-a">Measure</button>
+                  <div id="description-a"  class="description" hidden>
+                      <p>Guide laser to point A, click on it in the laser tracker view window. Press Play button to measure</p>
+                      <button id="measure-a">
+                          <img src="{% static 'icons/play.png' %}">
+                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
                   </div>
               </li>
-              <li>Measure point B for rough alignment</li>
-              <li>Automatic alignment. Stand by...</li>
-              <li>Measure A-side of the plate</li>
-              <li>Measure B-side of the plate</li>
-              <li>Measure C-side of the plate</li>
-              <li>Measure D-side of the plate</li>
-              <li>Inspection complete. Verify results!</li>
+              <li id="point-b">
+                  <span>Measure point B for rough alignment</span>
+                  <div id="description-b" class="description" hidden>
+                      <p>Guide laser to point B, click on it in the laser tracker view window. Press Play button to measure</p>
+                      <button id="measure-b">
+                          <img src="{% static 'icons/play.png' %}">
+                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </li>
+              <li id="auto-alignment">
+                  <span>Automatic alignment</span>
+                  <div id="description-auto" class="description" hidden>
+                      <p>Automatic alignment is ongoing. Please stand-by...</p>
+                      <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </li>
+              <li id="auto-inspection">
+                  <span>Automatic inspection</span>
+                  <div id="description-inspection" class="description" hidden>
+                      <p>Automatic inspection is ongoing. Please stand-by...</p>
+                      <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </li>
+              <li>Program completed. Verify results!</li>
           </ul>
         </div>
         <div class="col">
           <h2>Quick result overview</h2>
+          <div class="overview">
+              <img src="{% static 'demo-flange.png' %}">
+              <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Ref.</th>
+                      <th scope="col">Actual</th>
+                      <th scope="col">Required</th>
+                      <th scope="col">Delta</th>
+                      <th scope="col">Tolerance</th>
+                      <th scope="col">Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">A</th>
+                      <td id="meas_a">None</td>
+                      <td id="nom_a">850</td>
+                      <td id="delta_a">0</td>
+                      <td id="tol_a">+1/-2</td>
+                      <td id="result_a"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">B</th>
+                      <td id="meas_b"><span>None</span></td>
+                      <td id="nom_b">0</td>
+                      <td id="delta_b">0</td>
+                      <td id="tol_b">6</td>
+                      <td id="result_b"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">C</th>
+                      <td id="meas_c">None</td>
+                      <td id="nom_c">0</td>
+                      <td id="delta_c">0</td>
+                      <td id="tol_c">1</td>
+                      <td id="result_c"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">D</th>
+                      <td id="meas_d">None</td>
+                      <td id="nom_d">0</td>
+                      <td id="delta_d">0</td>
+                      <td id="tol_d">1</td>
+                      <td id="result_d"></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">E</th>
+                      <td id="meas_e">None</td>
+                      <td id="nom_e">0</td>
+                      <td id="delta_e">0</td>
+                      <td id="tol_e">2(+0/-2)</td>
+                      <td id="result_e"></td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
         </div>
       </div>
     </div>
@@ -42,12 +134,12 @@
 
 {% include 'user_interface/footer.html' %}
     <script>
-      const button = $("#start");
-      button.on("click", function(e) {
+      $("#start").on("click", function(e) {
         e.preventDefault();
+        $('#start').attr('hidden', true);
+        $('#stop').attr('hidden', false);
+        $('#description-temp').attr('hidden', false);
 
-        $("#start img").attr("src", "{% static 'icons/stop.png' %}");
-        $("#start span").text("Stop inspection")
         <!--  open template and start instrument  -->
         $.get(url="{% url 'load_and_start' template_name='flange inspection' %}", success=function(data) {
             var result = data;
@@ -55,19 +147,130 @@
 
             if (result === 'True') {
                 img_selection.attr("src", "{% static 'icons/check.png' %}");
-                $('#connection').attr('class', 'complete');
+                $('#description-temp').attr('hidden', true);
+                $('#instrument-connection').attr('class', 'complete');
                 $('#description-a').attr('hidden', false);
+                $.get(url="{% url 'ovc' %}");
                 } else {
+                alert('Problem with instrument connection!')
                 img_selection.attr("src", "{% static 'icons/mark.png' %}");
                 };
             });
         <!--    measure pt A        -->
         $('#measure-a').on('click', function(e) {
+            $('#measure-a img').attr('hidden', true);
+            $('#measure-a .spinner-border').attr('hidden', false);
             $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='A' target_type='smr' %}", success=function(data) {
                 $('#description-a').attr('hidden', true);
                 $('#point-a').attr('class', 'complete');
+                $.get(url="{% url 'ovc' %}");
+                $('#description-b').attr('hidden', false);
+                });
+            });
+
+         <!--    measure pt B       -->
+        $('#measure-b').on('click', function(e) {
+            $('#measure-b img').attr('hidden', true);
+            $('#measure-b .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='B' target_type='smr' %}", success=function(data) {
+                $('#description-b').attr('hidden', true);
+                $('#point-b').attr('class', 'complete');
+                $.get(url="{% url 'close_ovc' %}", success=function(data) {
+                    $('#description-auto').attr('hidden', false);
+                    $.get(url="{% url 'rough_alignment' %}", success=function(data) {
+                        $.get(url="{% url 'auto_alignment' %}", success=function(data) {
+                            if (data === 'True') {
+                                $('#description-auto').attr('hidden', true);
+                                $('#auto-alignment').attr('class', 'complete');
+                                $('#description-inspection').attr('hidden', false);
+                                $.get(url="{% url 'auto_inspection' %}", success=function(data) {
+                                    <!--          Inspection_results                         -->
+                                    const data_json = JSON.parse(data);
+                                    if (data_json['result'] === true) {
+                                        var inspection_result = data_json['dimensions'];
+
+                                        var measured_a = inspection_result['a'];
+                                        $('#meas_a').text(measured_a);
+                                        var nominal_a = $('#nom_a').text();
+                                        var delta_a = measured_a - nominal_a;
+                                        $('#delta_a').text(delta_a);
+                                        if (delta_a < -2 || delta_a > 1) {
+                                            $('#result_a').text('Fail');
+                                            $('#result_a').css('background-color', 'red');
+                                        } else {
+                                            $('#result_a').text('Pass');
+                                            $('#result_a').css('background-color', 'green');
+                                        };
+
+                                        var measured_b = inspection_result['b'];
+                                        $('#meas_b').text(measured_b);
+                                        var nominal_b = $('#nom_b').text();
+                                        var delta_b = measured_b - nominal_b;
+                                        $('#delta_b').text(delta_b);
+                                        if (delta_b > 6) {
+                                            $('#result_b').text('Fail');
+                                            $('#result_b').css('background-color', 'red');
+                                        } else {
+                                            $('#result_b').text('Pass');
+                                            $('#result_b').css('background-color', 'green');
+                                        };
+
+                                        var measured_c = inspection_result['c'];
+                                        $('#meas_c').text(measured_c);
+                                        var nominal_c = $('#nom_c').text();
+                                        var delta_c = measured_c - nominal_c;
+                                        $('#delta_c').text(delta_c);
+                                        if (delta_c > 1) {
+                                            $('#result_c').text('Fail');
+                                            $('#result_c').css('background-color', 'red');
+                                        } else {
+                                            $('#result_c').text('Pass');
+                                            $('#result_c').css('background-color', 'green');
+                                        };
+
+                                        var measured_d = inspection_result['d'];
+                                        $('#meas_d').text(measured_d);
+                                        var nominal_d = $('#nom_d').text();
+                                        var delta_d = measured_d - nominal_d;
+                                        $('#delta_d').text(delta_d);
+                                        if (delta_d > 1) {
+                                            $('#result_d').text('Fail');
+                                            $('#result_d').css('background-color', 'red');
+                                        } else {
+                                            $('#result_d').text('Pass');
+                                            $('#result_d').css('background-color', 'green');
+                                        };
+
+                                        var measured_e = inspection_result['e'];
+                                        $('#meas_e').text(measured_e);
+                                        var nominal_e = $('#nom_e').text();
+                                        var delta_e = measured_e - nominal_e;
+                                        $('#delta_e').text(delta_e);
+                                        if (delta_e > 2) {
+                                            $('#result_e').text('Fail');
+                                            $('#result_e').css('background-color', 'red');
+                                        } else {
+                                            $('#result_e').text('Pass');
+                                            $('#result_e').css('background-color', 'green');
+                                        };
+                                    } else {
+                                        alert('Automatic measurement failed. Investigate environment and try again');
+                                    };
+                                    });
+                            } else {
+                                alert('Automatic alignment failed. Investigate environment and try again');
+                            };
+                        });
+                    });
+                });
+<!--                var to_view = document.getElementById('description-auto');-->
+<!--                to_view.scrollIntoView({ behavior: "smooth"});-->
                 });
             });
       });
+
+      $('#stop').on('click', function(e) {
+        location.reload();
+        });
     </script>
 {% endblock %}
