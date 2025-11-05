@@ -29,8 +29,8 @@ def open_template_check_connection(template_name):
     collection_name = 'Inspection'
     instrument_id = 0
     template_path = os.path.join(r'C:\Users\AndreyOcheretianko\Desktop\Lamprell', template_name + '.xit64')
-
     sa.open_sa_file(template_path)
+    # sa.set_sa_window_state('Hide')
 
     sa.start_instrument_interface(collection_name, instrument_id, initialize=False)
 

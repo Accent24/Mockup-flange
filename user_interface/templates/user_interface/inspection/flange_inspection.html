@@ -87,41 +87,41 @@
                     <tr>
                       <th scope="row">A</th>
                       <td id="meas_a">None</td>
-                      <td id="nom_a">850</td>
-                      <td id="delta_a">0</td>
-                      <td id="tol_a">+1/-2</td>
+                      <td id="nom_a">850.00</td>
+                      <td id="delta_a">0.00</td>
+                      <td id="tol_a">+1.00/-2.00</td>
                       <td id="result_a"></td>
                     </tr>
                     <tr>
                       <th scope="row">B</th>
                       <td id="meas_b"><span>None</span></td>
-                      <td id="nom_b">0</td>
-                      <td id="delta_b">0</td>
-                      <td id="tol_b">6</td>
+                      <td id="nom_b">0.00</td>
+                      <td id="delta_b">0.00</td>
+                      <td id="tol_b">6.00</td>
                       <td id="result_b"></td>
                     </tr>
                     <tr>
                       <th scope="row">C</th>
                       <td id="meas_c">None</td>
-                      <td id="nom_c">0</td>
-                      <td id="delta_c">0</td>
-                      <td id="tol_c">1</td>
+                      <td id="nom_c">0.00</td>
+                      <td id="delta_c">0.00</td>
+                      <td id="tol_c">1.00</td>
                       <td id="result_c"></td>
                     </tr>
                     <tr>
                       <th scope="row">D</th>
                       <td id="meas_d">None</td>
-                      <td id="nom_d">0</td>
-                      <td id="delta_d">0</td>
-                      <td id="tol_d">1</td>
+                      <td id="nom_d">0.00</td>
+                      <td id="delta_d">0.00</td>
+                      <td id="tol_d">1.00</td>
                       <td id="result_d"></td>
                     </tr>
                     <tr>
                       <th scope="row">E</th>
                       <td id="meas_e">None</td>
-                      <td id="nom_e">0</td>
-                      <td id="delta_e">0</td>
-                      <td id="tol_e">2(+0/-2)</td>
+                      <td id="nom_e">0.00</td>
+                      <td id="delta_e">0.00</td>
+                      <td id="tol_e">2.00(+0.00/-2.00)</td>
                       <td id="result_e"></td>
                     </tr>
                   </tbody>
@@ -183,80 +183,7 @@
                                 $('#description-auto').attr('hidden', true);
                                 $('#auto-alignment').attr('class', 'complete');
                                 $('#description-inspection').attr('hidden', false);
-                                $.get(url="{% url 'auto_inspection' %}", success=function(data) {
-                                    <!--          Inspection_results                         -->
-                                    const data_json = JSON.parse(data);
-                                    if (data_json['result'] === true) {
-                                        var inspection_result = data_json['dimensions'];
-
-                                        var measured_a = inspection_result['a'];
-                                        $('#meas_a').text(measured_a);
-                                        var nominal_a = $('#nom_a').text();
-                                        var delta_a = measured_a - nominal_a;
-                                        $('#delta_a').text(delta_a);
-                                        if (delta_a < -2 || delta_a > 1) {
-                                            $('#result_a').text('Fail');
-                                            $('#result_a').css('background-color', 'red');
-                                        } else {
-                                            $('#result_a').text('Pass');
-                                            $('#result_a').css('background-color', 'green');
-                                        };
-
-                                        var measured_b = inspection_result['b'];
-                                        $('#meas_b').text(measured_b);
-                                        var nominal_b = $('#nom_b').text();
-                                        var delta_b = measured_b - nominal_b;
-                                        $('#delta_b').text(delta_b);
-                                        if (delta_b > 6) {
-                                            $('#result_b').text('Fail');
-                                            $('#result_b').css('background-color', 'red');
-                                        } else {
-                                            $('#result_b').text('Pass');
-                                            $('#result_b').css('background-color', 'green');
-                                        };
-
-                                        var measured_c = inspection_result['c'];
-                                        $('#meas_c').text(measured_c);
-                                        var nominal_c = $('#nom_c').text();
-                                        var delta_c = measured_c - nominal_c;
-                                        $('#delta_c').text(delta_c);
-                                        if (delta_c > 1) {
-                                            $('#result_c').text('Fail');
-                                            $('#result_c').css('background-color', 'red');
-                                        } else {
-                                            $('#result_c').text('Pass');
-                                            $('#result_c').css('background-color', 'green');
-                                        };
-
-                                        var measured_d = inspection_result['d'];
-                                        $('#meas_d').text(measured_d);
-                                        var nominal_d = $('#nom_d').text();
-                                        var delta_d = measured_d - nominal_d;
-                                        $('#delta_d').text(delta_d);
-                                        if (delta_d > 1) {
-                                            $('#result_d').text('Fail');
-                                            $('#result_d').css('background-color', 'red');
-                                        } else {
-                                            $('#result_d').text('Pass');
-                                            $('#result_d').css('background-color', 'green');
-                                        };
-
-                                        var measured_e = inspection_result['e'];
-                                        $('#meas_e').text(measured_e);
-                                        var nominal_e = $('#nom_e').text();
-                                        var delta_e = measured_e - nominal_e;
-                                        $('#delta_e').text(delta_e);
-                                        if (delta_e > 2) {
-                                            $('#result_e').text('Fail');
-                                            $('#result_e').css('background-color', 'red');
-                                        } else {
-                                            $('#result_e').text('Pass');
-                                            $('#result_e').css('background-color', 'green');
-                                        };
-                                    } else {
-                                        alert('Automatic measurement failed. Investigate environment and try again');
-                                    };
-                                    });
+                                automatic_inspection();
                             } else {
                                 alert('Automatic alignment failed. Investigate environment and try again');
                             };
@@ -271,6 +198,95 @@
 
       $('#stop').on('click', function(e) {
         location.reload();
+      });
+
+      $('#repeat-inspection').on('click', function(e) {
+        e.preventDefault();
+        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
+            automatic_inspection();
         });
+      });
+
+      function automatic_inspection() {
+        $('#auto-inspection').removeClass('complete');
+        $.get(url="{% url 'auto_inspection' %}", success=function(data) {
+            <!--          Inspection_results                         -->
+            const data_json = JSON.parse(data);
+            if (data_json['result'] === true) {
+                var inspection_result = data_json['dimensions'];
+
+                var measured_a = inspection_result['a'];
+                $('#meas_a').text(measured_a);
+                var nominal_a = $('#nom_a').text();
+                var delta_a = measured_a - nominal_a;
+                $('#delta_a').text(delta_a.toFixed(2));
+                if (delta_a < -2 || delta_a > 1) {
+                    $('#result_a').text('Fail');
+                    $('#result_a').css('background-color', 'red');
+                } else {
+                    $('#result_a').text('Pass');
+                    $('#result_a').css('background-color', 'green');
+                };
+
+                var measured_b = inspection_result['b'];
+                $('#meas_b').text(measured_b);
+                var nominal_b = $('#nom_b').text();
+                var delta_b = measured_b - nominal_b;
+                $('#delta_b').text(delta_b.toFixed(2));
+                if (delta_b > 6) {
+                    $('#result_b').text('Fail');
+                    $('#result_b').css('background-color', 'red');
+                } else {
+                    $('#result_b').text('Pass');
+                    $('#result_b').css('background-color', 'green');
+                };
+
+                var measured_c = inspection_result['c'];
+                $('#meas_c').text(measured_c);
+                var nominal_c = $('#nom_c').text();
+                var delta_c = measured_c - nominal_c;
+                $('#delta_c').text(delta_c.toFixed(2));
+                if (delta_c > 1) {
+                    $('#result_c').text('Fail');
+                    $('#result_c').css('background-color', 'red');
+                } else {
+                    $('#result_c').text('Pass');
+                    $('#result_c').css('background-color', 'green');
+                };
+
+                var measured_d = inspection_result['d'];
+                $('#meas_d').text(measured_d);
+                var nominal_d = $('#nom_d').text();
+                var delta_d = measured_d - nominal_d;
+                $('#delta_d').text(delta_d.toFixed(2));
+                if (delta_d > 1) {
+                    $('#result_d').text('Fail');
+                    $('#result_d').css('background-color', 'red');
+                } else {
+                    $('#result_d').text('Pass');
+                    $('#result_d').css('background-color', 'green');
+                };
+
+                var measured_e = inspection_result['e'];
+                $('#meas_e').text(measured_e);
+                var nominal_e = $('#nom_e').text();
+                var delta_e = measured_e - nominal_e;
+                $('#delta_e').text(delta_e.toFixed(2));
+                if (delta_e > 2) {
+                    $('#result_e').text('Fail');
+                    $('#result_e').css('background-color', 'red');
+                } else {
+                    $('#result_e').text('Pass');
+                    $('#result_e').css('background-color', 'green');
+                };
+                $('#description-inspection').attr('hidden', true);
+                $('#auto-inspection').attr('class', 'complete');
+                $('#stop').attr('hidden', true);
+                $('#repeat-inspection').attr('hidden', false);
+            } else {
+                alert('Automatic measurement failed. Investigate environment and try again');
+            };
+        });
+      };
     </script>
 {% endblock %}

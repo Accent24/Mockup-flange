@@ -6,6 +6,7 @@ urlpatterns = [
     path('api/rough_alignment/', rough_alignment, name='rough_alignment'),
     path('api/automatic_alignment/', automatic_alignment, name='auto_alignment'),
     path('api/automatic_measurement/', inspection, name='auto_inspection'),
+    path('api/clear_measurement/', clear_measurement, name='clear_measurement'),
     path('api/close_camera_window/', ovc_close, name='close_ovc'),
     path('api/camera_window/', ovc, name='ovc'),
     path('api/measure/<str:collection>/<str:group>/<str:name>/<str:target_type>/', measure, name='measure_target'),

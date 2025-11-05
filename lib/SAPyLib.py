@@ -347,6 +347,17 @@ def ask_for_string_pulldown(question: str, answers: list) -> str:
     return answer[1]
 
 
+def object_existence_test(collection: str, object_name: str):
+    func_name = "Object Existence Test (Check Only)"
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetCollectionObjectNameArg("Object Name", "Inspection", "Flatness")
+
+    NrkSdk.ExecuteStep()
+
+    getResult(func_name)
+
+    return NrkSdk.GetBoolArg('Exists?', False)[1]
+
 # ###############################
 # Chapter 4 - MP Task Overview ##
 # ###############################
@@ -3373,7 +3384,7 @@ def run_subroutine(path: str, share_var, embedded, expected_return: dict = None)
             elif v == 'int':
                 values_to_return[k] = NrkSdk.GetIntegerArg(k, 0)[1]
             elif v == 'float':
-                values_to_return[k] = NrkSdk.GetDoubleArg(k, 0)[1]
+                values_to_return[k] = round(NrkSdk.GetDoubleArg(k, 0)[1], 2)
 
         return getResult(func_name), values_to_return
 

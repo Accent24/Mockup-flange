@@ -62,7 +62,17 @@ def automatic_alignment(request):
 
 
 def inspection(request):
-    message = sa.run_subroutine('template::inspection.mp', False, True)
+    result = sa.run_subroutine('Template::inspection.mp', False, True, {'a': 'float',
+                                                                                              'b': 'float',
+                                                                                              'c': 'float',
+                                                                                              'd': 'float',
+                                                                                              'e': 'float'})
+
+    return HttpResponse(json.dumps({'result': result[0], 'dimensions': result[1]}))
+
+
+def clear_measurement(request):
+    message = sa.run_subroutine('template::clear.mp', False, True)
 
     return HttpResponse(message)
 
@@ -132,10 +142,5 @@ class FlangeInspection(TemplateView):
 
 
 def test(request):
-    result = sa.run_subroutine('Template::test.mp', False, True, {'a': 'float',
-                                                                                              'b': 'float',
-                                                                                              'c': 'float',
-                                                                                              'd': 'float',
-                                                                                              'e': 'float'})
-
-    return HttpResponse(json.dumps({'result': result[0], 'dimensions': result[1]}))
+    print(sa.object_existence_test('Inspection', 'Flatness'))
+    return HttpResponse('None')
