@@ -40,8 +40,9 @@ class FillForm(models.Model):
         return reverse_lazy(self.station_name.view_name, kwargs={'pk': self.pk})
 
 
-class ProjectTolerance(models.Model):
+class ProjectNominalAndTolerance(models.Model):
     dimension_name = models.CharField(max_length=100, blank=False, verbose_name='Dimension reference name')
+    nominal = models.FloatField(blank=False, verbose_name='Nominal', default=0)
     tolerance_upper = models.FloatField(blank=False, verbose_name='Tolerance value - Upper', default=0)
     tolerance_lower = models.FloatField(blank=False, verbose_name='Tolerance value - Lower', default=0)
 
@@ -49,5 +50,5 @@ class ProjectTolerance(models.Model):
 
 
     def __str__(self):
-        return '{0} - {1} - +{2}/{3}'.format(self.station_name.name, self.dimension_name, self.tolerance_upper,
-                                              self.tolerance_lower)
+        return 'Ins: {0}, Dim: {1}, Nom: {2}, Tol: +{3}/{4}'.format(self.station_name.name, self.dimension_name.upper(),
+                                                            self.nominal, self.tolerance_upper, self.tolerance_lower)

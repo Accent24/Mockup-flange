@@ -1,14 +1,12 @@
-import json
-
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect, HttpResponse, reverse
-from pyexpat.errors import messages
-
 from lib.SAPyLib import connect_to_sa
-from .models import MainFunction, FillForm, ProjectTolerance
+from .models import MainFunction, FillForm, ProjectNominalAndTolerance
 from .sa_functions import *
 from django.core import serializers
-
+import win32gui
+from win32con import HWND_TOP
+import time
 
 # Start SA Sdk and connect
 def start_sdk(request):
@@ -38,13 +36,21 @@ def measure(request, collection, group, name, target_type):
 
 
 def ovc(request):
-    message = sa.instrument_operational_check(collection_inst='', id_inst=0, check_type='Camera View')
+    message = sa.instrument_operational_check(collection_inst='Inspection', id_inst=0, check_type='Camera View')
+
+    while True:
+        window_handle = win32gui.FindWindow(None, 'Overview Camera')
+
+        if win32gui.IsWindow(window_handle):
+            win32gui.SetWindowPos(window_handle, HWND_TOP, 1000, 100, 900, 800, 0)
+            break
+        time.sleep(1.0)
 
     return HttpResponse(message)
 
 
 def ovc_close(request):
-    message = sa.instrument_operational_check(collection_inst='', id_inst=0, check_type='Close Camera View')
+    message = sa.instrument_operational_check(collection_inst='Inspection', id_inst=0, check_type='Close Camera View')
 
     return HttpResponse(message)
 
@@ -117,15 +123,19 @@ def plate_inspection(request, pk):
 
     form_dic = serializers.serialize('json', [form_object])
     tolerance_dic = serializers.serialize('json',
-                                      ProjectTolerance.objects.filter(station_name_id=form_object.station_name.pk))
+                                      ProjectNominalAndTolerance.objects.filter(station_name_id=form_object.station_name.pk))
 
     return render(request, template_name='user_interface/inspection/plate_inspection.html',
                   context={'form_pk': pk})
 
 
 def flange_inspection(request, pk):
+    station_id = FillForm.objects.get(pk=pk).station_name.pk
+    query_set = ProjectNominalAndTolerance.objects.filter(station_name=station_id)
+
     return render(request, template_name='user_interface/inspection/flange_inspection.html',
-                  context={'form_pk': pk})
+                  context={'form_pk': pk,
+                           'required_n_tolerance_list': query_set})
 
 
 def sys_exit(request):

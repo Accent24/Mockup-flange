@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import MainFunction, FillForm, ProjectTolerance
+from .models import MainFunction, FillForm, ProjectNominalAndTolerance
 
 
 # Register your models here.
 admin.site.register(MainFunction)
 admin.site.register(FillForm)
-admin.site.register(ProjectTolerance)
+admin.site.register(ProjectNominalAndTolerance)

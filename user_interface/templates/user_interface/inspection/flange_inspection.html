@@ -1,6 +1,7 @@
 {% extends "user_interface/base.html" %}
 
 {% load static %}
+{% load tags %}
 {% block page_css %}
 <link rel="stylesheet" href="{% static 'user_interface/inspection/flange_inspection.css' %}">
 <link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
@@ -84,46 +85,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <th scope="row">A</th>
-                      <td id="meas_a">None</td>
-                      <td id="nom_a">850.00</td>
-                      <td id="delta_a">0.00</td>
-                      <td id="tol_a">+1.00/-2.00</td>
-                      <td id="result_a"></td>
+                    {% for item in required_n_tolerance_list %}
+                    <tr id="{{ item.dimension_name }}">
+                      <th scope="row">{{ item.dimension_name|upper }}</th>
+                      <td id="{% prep_id 'meas' item.dimension_name %}" class="clearable"></td>
+                      <td id="nom_a">{{ item.nominal }}</td>
+                      <td id="delta_a" class="clearable"></td>
+                      <td id="tol_a">{% prep_tolerance_str item.tolerance_upper item.tolerance_lower %}</td>
+                      <td id="result_a" class="clearable result"></td>
                     </tr>
-                    <tr>
-                      <th scope="row">B</th>
-                      <td id="meas_b"><span>None</span></td>
-                      <td id="nom_b">0.00</td>
-                      <td id="delta_b">0.00</td>
-                      <td id="tol_b">6.00</td>
-                      <td id="result_b"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row">C</th>
-                      <td id="meas_c">None</td>
-                      <td id="nom_c">0.00</td>
-                      <td id="delta_c">0.00</td>
-                      <td id="tol_c">1.00</td>
-                      <td id="result_c"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row">D</th>
-                      <td id="meas_d">None</td>
-                      <td id="nom_d">0.00</td>
-                      <td id="delta_d">0.00</td>
-                      <td id="tol_d">1.00</td>
-                      <td id="result_d"></td>
-                    </tr>
-                    <tr>
-                      <th scope="row">E</th>
-                      <td id="meas_e">None</td>
-                      <td id="nom_e">0.00</td>
-                      <td id="delta_e">0.00</td>
-                      <td id="tol_e">2.00(+0.00/-2.00)</td>
-                      <td id="result_e"></td>
-                    </tr>
+                    {% endfor %}
                   </tbody>
               </table>
           </div>
@@ -202,10 +173,41 @@
 
       $('#repeat-inspection').on('click', function(e) {
         e.preventDefault();
+
+        $('.result').css('background-color', 'none');
+        $('.clearable').text('');
         $.get(url="{% url 'clear_measurement' %}", success=function(data) {
             automatic_inspection();
         });
       });
+
+      function fill_results(inspection_results) {
+        const dimensions = Object.keys(inspection_results)
+        for (let i = 0; i != dimensions.length; i++) {
+            var row_objects = $('#' + dimensions[i] + ' td');
+
+            var measured = inspection_results[dimensions[i]];
+            row_objects[0].textContent = measured;
+
+            var nominal = row_objects[1].textContent;
+
+            var delta = measured - nominal;
+            row_objects[2].textContent = delta;
+
+            var tolerance_upper, tolerance_lower
+            [tolerance_upper, tolerance_lower] = row_objects[3].textContent.split('/');
+
+            if (delta < tolerance_lower || delta > tolerance_upper) {
+                row_objects[4].textContent = 'Fail';
+                row_objects[4].style.background = 'red';
+            } else {
+                row_objects[4].style.background = 'green';
+                row_objects[4].textContent = 'Pass';
+            };
+        }
+      };
+
+      fill_results({'a': 10, 'b': 20, 'c': 30, 'd': -0.1});
 
       function automatic_inspection() {
         $('#auto-inspection').removeClass('complete');
