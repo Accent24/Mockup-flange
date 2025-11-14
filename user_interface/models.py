@@ -2,6 +2,7 @@ from django.db import models
 from django.shortcuts import reverse
 from django.urls import reverse_lazy
 from datetime import datetime
+from .sa_functions import list_of_cans, list_of_stages
 
 
 class MainFunction(models.Model):
@@ -25,9 +26,12 @@ class FillForm(models.Model):
     job_number = models.CharField(max_length=200, blank=True, verbose_name='Job number')
     wo_number = models.CharField(max_length=200, blank=True, verbose_name='Work order number')
     steel_temperature = models.IntegerField(blank=False, verbose_name='Steel temperature')
-    fabrication_stage = models.CharField(max_length=200, blank=False, verbose_name='Fabrication stage')
+    fabrication_stage = models.CharField(max_length=200, blank=False, verbose_name='Fabrication stage', choices=list_of_stages)
     file_path = models.CharField(max_length=250, blank=False)
     station_name = models.ForeignKey(MainFunction, on_delete=models.CASCADE, verbose_name='Station name')
+
+    can_ref = models.CharField(blank=True, verbose_name='CAN reference', choices=list_of_cans,
+                               max_length=200, null=True)
 
 
     def __str__(self):
@@ -45,10 +49,21 @@ class ProjectNominalAndTolerance(models.Model):
     nominal = models.FloatField(blank=False, verbose_name='Nominal', default=0)
     tolerance_upper = models.FloatField(blank=False, verbose_name='Tolerance value - Upper', default=0)
     tolerance_lower = models.FloatField(blank=False, verbose_name='Tolerance value - Lower', default=0)
-
+    can_ref = models.CharField(blank=True, verbose_name='CAN reference', choices=list_of_cans,
+                               max_length=200, null=True)
     station_name = models.ForeignKey(MainFunction, on_delete=models.CASCADE)
 
 
     def __str__(self):
-        return 'Ins: {0}, Dim: {1}, Nom: {2}, Tol: +{3}/{4}'.format(self.station_name.name, self.dimension_name.upper(),
-                                                            self.nominal, self.tolerance_upper, self.tolerance_lower)
+        if not self.can_ref:
+            return 'Ins: {0}, Dim: {1}, Nom: {2}, Tol: +{3}/{4}'.format(self.station_name.name,
+                                                                        self.dimension_name.upper(),
+                                                                        self.nominal, self.tolerance_upper,
+                                                                        self.tolerance_lower)
+        else:
+            return 'Ins: {0}, Can: {1}, Dim: {2}, Nom: {3}, Tol: +{4}/{5}'.format(self.station_name.name,
+                                                                                  self.can_ref,
+                                                                                  self.dimension_name.upper(),
+                                                                                  self.nominal,
+                                                                                  self.tolerance_upper,
+                                                                                  self.tolerance_lower)

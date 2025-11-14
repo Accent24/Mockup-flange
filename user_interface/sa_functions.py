@@ -28,10 +28,10 @@ def check_for_sa_instance():
 def open_template_check_connection(template_name):
     collection_name = 'Inspection'
     instrument_id = 0
-    template_path = os.path.join(r'C:\Users\AndreyOcheretianko\Desktop\Lamprell', template_name + '.xit64')
+    template_path = os.path.join(r'C:\Users\AndreyOcheretianko\OneDrive - ALTO LLC\Lamprell development\SA Templates', template_name + '.xit64')
     sa.open_sa_file(template_path)
     # sa.set_sa_window_state('Hide')
-
+    sa.set_interaction_mode('Automatic', 'Never Halt', 'Allow Application Interaction')
     sa.start_instrument_interface(collection_name, instrument_id, initialize=False)
 
     if bool(sa.verify_instrument_connection(collection_name, instrument_id)):
@@ -64,3 +64,15 @@ def close_app():
 
     pyautogui.shortcut('ctrl', 'c')
     pyautogui.shortcut('ctrl', 'c')
+
+list_of_cans = [('MS-CN1', 'MS-CN1'),
+                ('MS-CN2', 'MS-CN2'),
+                ('MS-CN3', 'MS-CN3'),
+                ('MS-CN4', 'MS-CN4'),
+                ('MS-CN5', 'MS-CN5'),
+                ('MS-CN6', 'MS-CN6')]
+
+list_of_stages = [('After welding', 'After welding'),
+                  ('After fit-up', 'After fit-up'),
+                  ('Welding in progress', 'Welding in progress'),
+                  ('Plate after grinding', 'Plate after grinding')]

@@ -59,3 +59,18 @@ span {
 
     padding: 5px;
 }
+
+select {
+    width: 254px;
+    height: 34px;
+    padding-left: 2px;
+    padding-right: 2px;
+
+    padding-top = 1px;
+    padding-bottom = 1px;
+
+}
+
+input {
+    padding: 1px;
+}

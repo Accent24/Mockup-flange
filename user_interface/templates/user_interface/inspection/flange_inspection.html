@@ -3,7 +3,7 @@
 {% load static %}
 {% load tags %}
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'user_interface/inspection/flange_inspection.css' %}">
+<link rel="stylesheet" href="{% static 'user_interface/inspection/flange_inspection/flange_inspection.css' %}">
 <link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
 {% endblock %}
 
@@ -72,7 +72,7 @@
         <div class="col">
           <h2>Quick result overview</h2>
           <div class="overview">
-              <img src="{% static 'demo-flange.png' %}">
+              <img src="{% static 'user_interface/inspection/flange_inspection/demo-flange.png' %}">
               <table class="table table-striped">
                   <thead>
                     <tr>
@@ -88,11 +88,11 @@
                     {% for item in required_n_tolerance_list %}
                     <tr id="{{ item.dimension_name }}">
                       <th scope="row">{{ item.dimension_name|upper }}</th>
-                      <td id="{% prep_id 'meas' item.dimension_name %}" class="clearable"></td>
-                      <td id="nom_a">{{ item.nominal }}</td>
-                      <td id="delta_a" class="clearable"></td>
-                      <td id="tol_a">{% prep_tolerance_str item.tolerance_upper item.tolerance_lower %}</td>
-                      <td id="result_a" class="clearable result"></td>
+                      <td class="clearable"></td>
+                      <td>{{ item.nominal }}</td>
+                      <td class="clearable"></td>
+                      <td>{% prep_tolerance_str item.tolerance_upper item.tolerance_lower %}</td>
+                      <td class="clearable result"></td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -139,7 +139,7 @@
                 });
             });
 
-         <!--    measure pt B       -->
+        <!--    measure pt B       -->
         $('#measure-b').on('click', function(e) {
             $('#measure-b img').attr('hidden', true);
             $('#measure-b .spinner-border').attr('hidden', false);
@@ -167,48 +167,6 @@
             });
       });
 
-      $('#stop').on('click', function(e) {
-        location.reload();
-      });
-
-      $('#repeat-inspection').on('click', function(e) {
-        e.preventDefault();
-
-        $('.result').css('background-color', 'none');
-        $('.clearable').text('');
-        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
-            automatic_inspection();
-        });
-      });
-
-      function fill_results(inspection_results) {
-        const dimensions = Object.keys(inspection_results)
-        for (let i = 0; i != dimensions.length; i++) {
-            var row_objects = $('#' + dimensions[i] + ' td');
-
-            var measured = inspection_results[dimensions[i]];
-            row_objects[0].textContent = measured;
-
-            var nominal = row_objects[1].textContent;
-
-            var delta = measured - nominal;
-            row_objects[2].textContent = delta;
-
-            var tolerance_upper, tolerance_lower
-            [tolerance_upper, tolerance_lower] = row_objects[3].textContent.split('/');
-
-            if (delta < tolerance_lower || delta > tolerance_upper) {
-                row_objects[4].textContent = 'Fail';
-                row_objects[4].style.background = 'red';
-            } else {
-                row_objects[4].style.background = 'green';
-                row_objects[4].textContent = 'Pass';
-            };
-        }
-      };
-
-      fill_results({'a': 10, 'b': 20, 'c': 30, 'd': -0.1});
-
       function automatic_inspection() {
         $('#auto-inspection').removeClass('complete');
         $.get(url="{% url 'auto_inspection' %}", success=function(data) {
@@ -217,70 +175,9 @@
             if (data_json['result'] === true) {
                 var inspection_result = data_json['dimensions'];
 
-                var measured_a = inspection_result['a'];
-                $('#meas_a').text(measured_a);
-                var nominal_a = $('#nom_a').text();
-                var delta_a = measured_a - nominal_a;
-                $('#delta_a').text(delta_a.toFixed(2));
-                if (delta_a < -2 || delta_a > 1) {
-                    $('#result_a').text('Fail');
-                    $('#result_a').css('background-color', 'red');
-                } else {
-                    $('#result_a').text('Pass');
-                    $('#result_a').css('background-color', 'green');
-                };
+                <!--     Fill in inspection results           -->
+                fill_results(inspection_result);
 
-                var measured_b = inspection_result['b'];
-                $('#meas_b').text(measured_b);
-                var nominal_b = $('#nom_b').text();
-                var delta_b = measured_b - nominal_b;
-                $('#delta_b').text(delta_b.toFixed(2));
-                if (delta_b > 6) {
-                    $('#result_b').text('Fail');
-                    $('#result_b').css('background-color', 'red');
-                } else {
-                    $('#result_b').text('Pass');
-                    $('#result_b').css('background-color', 'green');
-                };
-
-                var measured_c = inspection_result['c'];
-                $('#meas_c').text(measured_c);
-                var nominal_c = $('#nom_c').text();
-                var delta_c = measured_c - nominal_c;
-                $('#delta_c').text(delta_c.toFixed(2));
-                if (delta_c > 1) {
-                    $('#result_c').text('Fail');
-                    $('#result_c').css('background-color', 'red');
-                } else {
-                    $('#result_c').text('Pass');
-                    $('#result_c').css('background-color', 'green');
-                };
-
-                var measured_d = inspection_result['d'];
-                $('#meas_d').text(measured_d);
-                var nominal_d = $('#nom_d').text();
-                var delta_d = measured_d - nominal_d;
-                $('#delta_d').text(delta_d.toFixed(2));
-                if (delta_d > 1) {
-                    $('#result_d').text('Fail');
-                    $('#result_d').css('background-color', 'red');
-                } else {
-                    $('#result_d').text('Pass');
-                    $('#result_d').css('background-color', 'green');
-                };
-
-                var measured_e = inspection_result['e'];
-                $('#meas_e').text(measured_e);
-                var nominal_e = $('#nom_e').text();
-                var delta_e = measured_e - nominal_e;
-                $('#delta_e').text(delta_e.toFixed(2));
-                if (delta_e > 2) {
-                    $('#result_e').text('Fail');
-                    $('#result_e').css('background-color', 'red');
-                } else {
-                    $('#result_e').text('Pass');
-                    $('#result_e').css('background-color', 'green');
-                };
                 $('#description-inspection').attr('hidden', true);
                 $('#auto-inspection').attr('class', 'complete');
                 $('#stop').attr('hidden', true);
@@ -290,5 +187,19 @@
             };
         });
       };
+
+      $('#stop').on('click', function(e) {
+        location.reload();
+      });
+
+      $('#repeat-inspection').on('click', function(e) {
+        e.preventDefault();
+
+        $('.result').removeAttr('style');
+        $('.clearable').text('');
+        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
+            automatic_inspection();
+        });
+      });
     </script>
 {% endblock %}

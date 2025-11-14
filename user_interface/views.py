@@ -96,13 +96,20 @@ class FillFormCreate(CreateView):
               'job_number',
               'wo_number',
               'steel_temperature',
-              'fabrication_stage']
+              'fabrication_stage',
+              'can_ref']
 
 
     def form_valid(self, form):
         form.instance.station_name = MainFunction.objects.get(pk=self.kwargs['pk'])
 
         return super().form_valid(form)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['station_name'] = MainFunction.objects.get(pk=self.kwargs['pk']).name
+        return context
 
 
 class FillFormUpdate(UpdateView):
@@ -113,7 +120,14 @@ class FillFormUpdate(UpdateView):
               'job_number',
               'wo_number',
               'steel_temperature',
-              'fabrication_stage']
+              'fabrication_stage',
+              'can_ref']
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['station_name'] = FillForm.objects.get(pk=self.kwargs['pk']).station_name
+        return context
 
 
 def plate_inspection(request, pk):
@@ -125,8 +139,12 @@ def plate_inspection(request, pk):
     tolerance_dic = serializers.serialize('json',
                                       ProjectNominalAndTolerance.objects.filter(station_name_id=form_object.station_name.pk))
 
+    station_id = FillForm.objects.get(pk=pk).station_name.pk
+    query_set = ProjectNominalAndTolerance.objects.filter(station_name=station_id)
+
     return render(request, template_name='user_interface/inspection/plate_inspection.html',
-                  context={'form_pk': pk})
+                  context={'form_pk': pk,
+                           'required_n_tolerance_list': query_set})
 
 
 def flange_inspection(request, pk):
