@@ -161,15 +161,13 @@
                         });
                     });
                 });
-<!--                var to_view = document.getElementById('description-auto');-->
-<!--                to_view.scrollIntoView({ behavior: "smooth"});-->
-                });
             });
+        });
       });
 
       function automatic_inspection() {
         $('#auto-inspection').removeClass('complete');
-        $.get(url="{% url 'auto_inspection' %}", success=function(data) {
+        $.get(url="{% url 'auto_inspection' num_dim=num_dim %}", success=function(data) {
             <!--          Inspection_results                         -->
             const data_json = JSON.parse(data);
             if (data_json['result'] === true) {

@@ -25,3 +25,7 @@
     }
  };
 
+$(window).on('blur', function(e) {
+    $.get(url="http://127.0.0.1:8000/api/bring_foreground/", success=function(data) {
+    });
+});

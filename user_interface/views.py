@@ -1,10 +1,13 @@
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect, HttpResponse, reverse
+from pyexpat.errors import messages
+import string
 from lib.SAPyLib import connect_to_sa
 from .models import MainFunction, FillForm, ProjectNominalAndTolerance
 from .sa_functions import *
 from django.core import serializers
 import win32gui
+import pywintypes
 from win32con import HWND_TOP
 import time
 
@@ -29,10 +32,17 @@ def load_and_start(request, template_name):
 
     return HttpResponse(message)
 
+
 def measure(request, collection, group, name, target_type):
     message = measure_pt(collection, group, name, target_type)
 
     return HttpResponse(message)
+
+
+def spatial_scan(request, collection, group):
+    cancel_measurement_and_start_new(collection, group, 'Plate scan')
+
+    return HttpResponse()
 
 
 def ovc(request):
@@ -66,13 +76,15 @@ def automatic_alignment(request):
 
     return HttpResponse(message)
 
+# automatic inspection and analysis. returns results
+def inspection(request, num_dim):
+    char_list = string.ascii_lowercase
+    expected_return_dic = dict()
 
-def inspection(request):
-    result = sa.run_subroutine('Template::inspection.mp', False, True, {'a': 'float',
-                                                                                              'b': 'float',
-                                                                                              'c': 'float',
-                                                                                              'd': 'float',
-                                                                                              'e': 'float'})
+    for char_index in range(0, num_dim):
+        expected_return_dic[char_list[char_index]] = 'float'
+
+    result = sa.run_subroutine('Template::inspection.mp', False, True, expected_return_dic)
 
     return HttpResponse(json.dumps({'result': result[0], 'dimensions': result[1]}))
 
@@ -139,12 +151,14 @@ def plate_inspection(request, pk):
     tolerance_dic = serializers.serialize('json',
                                       ProjectNominalAndTolerance.objects.filter(station_name_id=form_object.station_name.pk))
 
-    station_id = FillForm.objects.get(pk=pk).station_name.pk
-    query_set = ProjectNominalAndTolerance.objects.filter(station_name=station_id)
+    fill_form_query = FillForm.objects.get(pk=pk)
+    query_set = ProjectNominalAndTolerance.objects.filter(station_name=fill_form_query.station_name.pk,
+                                                          can_ref=fill_form_query.can_ref)
 
     return render(request, template_name='user_interface/inspection/plate_inspection.html',
                   context={'form_pk': pk,
-                           'required_n_tolerance_list': query_set})
+                           'required_n_tolerance_list': query_set,
+                           'num_dim': len(query_set)})
 
 
 def flange_inspection(request, pk):
@@ -153,7 +167,22 @@ def flange_inspection(request, pk):
 
     return render(request, template_name='user_interface/inspection/flange_inspection.html',
                   context={'form_pk': pk,
-                           'required_n_tolerance_list': query_set})
+                           'required_n_tolerance_list': query_set,
+                           'num_dim': len(query_set)})
+
+
+def bring_window_foreground(request):
+    def enum_handler(hwnd, lParam):
+        if ' - Google Chrome' in win32gui.GetWindowText(hwnd):
+            try:
+                win32gui.SetForegroundWindow(hwnd)
+            except pywintypes.error:
+                pass
+
+    if not win32gui.FindWindow(None, 'Overview Camera'):
+        win32gui.EnumWindows(enum_handler, None)
+
+    return  HttpResponse()
 
 
 def sys_exit(request):
@@ -170,5 +199,6 @@ class FlangeInspection(TemplateView):
 
 
 def test(request):
-    print(sa.object_existence_test('Inspection', 'Flatness'))
-    return HttpResponse('None')
+    sa.show_hide_instrument_interface('Inspection', 0)
+    return HttpResponse('True')
+

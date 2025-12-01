@@ -2937,8 +2937,7 @@ def configure_and_measure(
     profile_name: str,
     measure_immediately: bool,
     wait_for_completion: bool,
-    timeout_in_secs: float,
-) -> bool:
+    timeout_in_secs: float) -> bool:
     """p956"""
     func_name = "Configure and Measure"
     log.debug(func_name)
@@ -3207,6 +3206,16 @@ def auto_correspond_with_proximity_trigger(
     NrkSdk.ExecuteStep()
     getResult(func_name)
 
+
+def show_hide_instrument_interface(col, instrument_id):
+    func_name = 'Show/Hide Instrument Interface'
+    NrkSdk.SetStep(func_name)
+
+    NrkSdk.SetColInstIdArg("Instrument's ID", col, instrument_id)
+    NrkSdk.SetBoolArg("Minimize Interface?", False)
+    NrkSdk.SetBoolArg("Hide Interface?", True)
+
+    NrkSdk.ExecuteStep()
 
 # ################################
 # Chapter 13 - Robot Operations ##

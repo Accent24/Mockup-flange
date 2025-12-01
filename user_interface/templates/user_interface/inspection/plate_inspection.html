@@ -26,33 +26,11 @@
               </li>
               <li id="side-a" class="row">
                   <span>Side A measurement</span>
-                  <div id="description-a"  class="description" >
+                  <div id="description-a"  class="description" hidden>
                       <ol class="operation">
                           <li>
                               <span>Take edge finding tool along with SMR and move to the Starting point of side <b>A</b>.</span>
                               <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_a.png' %}">
-                          </li>
-                          <li>Catch the beam and make sure the Laser tracker is "Green".</li>
-                          <li>The measurement will automatically start after 5 sec of SMR being stable. Laser tracker will blink continuously.</li>
-                          <li>Walk along the side <b>A</b> towards <b>B</b>.</li>
-                          <li>Break the beam once you reach the corner of the plate.</li>
-                          <li>Press "Next"</li>
-                      </ol>
-                      <button id="measure-a">
-                          <img src="{% static 'icons/arrows.png' %}">
-                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
-                            <span class="visually-hidden">Loading...</span>
-                          </div>
-                      </button>
-                  </div>
-              </li>
-              <li id="side-b" class="row">
-                  <span>Side B measurement</span>
-                  <div id="description-b" class="description">
-                      <ol class="operation">
-                          <li>
-                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>A</b>.</span>
-                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_b.png' %}">
                           </li>
                           <li>Catch the beam and make sure the Laser tracker is "Green".</li>
                           <li>The measurement will automatically start after 5 sec of SMR being stable. Laser tracker will blink continuously.</li>
@@ -68,17 +46,17 @@
                       </button>
                   </div>
               </li>
-              <li id="side-c" class="row">
-                  <span>Side C measurement</span>
-                  <div id="description-c" class="description">
+              <li id="side-b" class="row">
+                  <span>Side B measurement</span>
+                  <div id="description-b" class="description" hidden>
                       <ol class="operation">
                           <li>
-                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>A</b>.</span>
-                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_c.png' %}">
+                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>B</b>.</span>
+                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_b.png' %}">
                           </li>
                           <li>Catch the beam and make sure the Laser tracker is "Green".</li>
                           <li>The measurement will automatically start after 5 sec of SMR being stable. Laser tracker will blink continuously.</li>
-                          <li>Walk along the side <b>A</b> towards <b>B</b>.</li>
+                          <li>Walk along the side <b>B</b> towards <b>C</b>.</li>
                           <li>Break the beam once you reach the corner of the plate.</li>
                           <li>Press "Next"</li>
                       </ol>
@@ -90,17 +68,17 @@
                       </button>
                   </div>
               </li>
-              <li id="side-d" class="row">
-                  <span>Side D measurement</span>
-                  <div id="description-d" class="description">
+              <li id="side-c" class="row">
+                  <span>Side C measurement</span>
+                  <div id="description-c" class="description" hidden>
                       <ol class="operation">
                           <li>
-                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>A</b>.</span>
-                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_d.png' %}">
+                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>C</b>.</span>
+                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_c.png' %}">
                           </li>
                           <li>Catch the beam and make sure the Laser tracker is "Green".</li>
                           <li>The measurement will automatically start after 5 sec of SMR being stable. Laser tracker will blink continuously.</li>
-                          <li>Walk along the side <b>A</b> towards <b>B</b>.</li>
+                          <li>Walk along the side <b>C</b> towards <b>D</b>.</li>
                           <li>Break the beam once you reach the corner of the plate.</li>
                           <li>Press "Next"</li>
                       </ol>
@@ -112,7 +90,29 @@
                       </button>
                   </div>
               </li>
-              <li class="row">Program completed. Verify results!</li>
+              <li id="side-d" class="row">
+                  <span>Side D measurement</span>
+                  <div id="description-d" class="description" hidden>
+                      <ol class="operation">
+                          <li>
+                              <span>Take edge finding tool along with SMR and move to the Starting point of side <b>D</b>.</span>
+                              <img class="description-img" src="{% static 'user_interface/inspection/plate_inspection/side_d.png' %}">
+                          </li>
+                          <li>Catch the beam and make sure the Laser tracker is "Green".</li>
+                          <li>The measurement will automatically start after 5 sec of SMR being stable. Laser tracker will blink continuously.</li>
+                          <li>Walk along the side <b>D</b> towards <b>A</b>.</li>
+                          <li>Break the beam once you reach the corner of the plate.</li>
+                          <li>Press "Next"</li>
+                      </ol>
+                      <button id="get_results">
+                          <img src="{% static 'icons/arrows.png' %}">
+                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </li>
+              <li id="result-row" class="row">Program completed. Verify results!</li>
           </ul>
         </div>
         <div class="col">
@@ -159,119 +159,77 @@
 
         <!--  open template and start instrument  -->
         $.get(url="{% url 'load_and_start' template_name='plate inspection' %}", success=function(data) {
-            var result = data;
             var img_selection = $("img.instrument-connection");
 
-            if (result === 'True') {
+            if (data === 'True') {
                 img_selection.attr("src", "{% static 'icons/check.png' %}");
                 $('#description-temp').attr('hidden', true);
-                $('#instrument-connection').attr('class', 'complete');
+                $('#instrument-connection').addClass('complete');
                 $('#description-a').attr('hidden', false);
-                $.get(url="{% url 'ovc' %}");
-                } else {
-                alert('Problem with instrument connection!')
-                img_selection.attr("src", "{% static 'icons/mark.png' %}");
-                };
-            });
-        <!--    measure pt A        -->
-        $('#measure-a').on('click', function(e) {
-            $('#measure-a img').attr('hidden', true);
-            $('#measure-a .spinner-border').attr('hidden', false);
-            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='A' target_type='smr' %}", success=function(data) {
-                $('#description-a').attr('hidden', true);
-                $('#point-a').attr('class', 'complete');
-                $.get(url="{% url 'ovc' %}");
-                $('#description-b').attr('hidden', false);
-                });
-            });
+                document.getElementById('side-a').scrollIntoView(false, {behavior: "smooth"});
+                <!--    Start A side scan            -->
+                $.get(url="{% url 'spatial_scan' collection='Inspection' group='Side A' %}", success=function(data) {});
+            }
+        });
 
-         <!--    measure pt B       -->
         $('#measure-b').on('click', function(e) {
-            $('#measure-b img').attr('hidden', true);
-            $('#measure-b .spinner-border').attr('hidden', false);
-            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='B' target_type='smr' %}", success=function(data) {
+                $('#description-a').attr('hidden', true);
+                $('#side-a').addClass('complete');
+                $('#description-b').attr('hidden', false);
+                document.getElementById('side-b').scrollIntoView(false, {behavior: "smooth"});
+                <!--      Start B side scan          -->
+                $.get(url="{% url 'spatial_scan' collection='Inspection' group='Side B' %}", success=function(data) {});
+        });
+
+        $('#measure-c').on('click', function(e) {
                 $('#description-b').attr('hidden', true);
-                $('#point-b').attr('class', 'complete');
-                $.get(url="{% url 'close_ovc' %}", success=function(data) {
-                    $('#description-auto').attr('hidden', false);
-                    $.get(url="{% url 'rough_alignment' %}", success=function(data) {
-                        $.get(url="{% url 'auto_alignment' %}", success=function(data) {
-                            if (data === 'True') {
-                                $('#description-auto').attr('hidden', true);
-                                $('#auto-alignment').attr('class', 'complete');
-                                $('#description-inspection').attr('hidden', false);
-                                automatic_inspection();
-                            } else {
-                                alert('Automatic alignment failed. Investigate environment and try again');
-                            };
-                        });
-                    });
+                $('#side-b').addClass('complete');
+                $('#description-c').attr('hidden', false);
+                document.getElementById('side-c').scrollIntoView(false, {behavior: "smooth"});
+                <!--      Start C side scan          -->
+                $.get(url="{% url 'spatial_scan' collection='Inspection' group='Side C' %}", success=function(data) {});
+        });
+
+        $('#measure-d').on('click', function(e) {
+                $('#description-c').attr('hidden', true);
+                $('#side-c').addClass('complete');
+                $('#description-d').attr('hidden', false);
+                document.getElementById('side-d').scrollIntoView(false, {behavior: "smooth"});
+                <!--      Start C side scan          -->
+                $.get(url="{% url 'spatial_scan' collection='Inspection' group='Side D' %}", success=function(data) {});
+        });
+
+        $('#get_results').on('click', function(e) {
+                $('#description-d').attr('hidden', true);
+                $('#side-d').addClass('complete');
+                document.getElementById('result-row').scrollIntoView(false, {behavior: "smooth"});
+                <!--      get results          -->
+                $('#auto-inspection').removeClass('complete');
+                $.get(url="{% url 'auto_inspection' num_dim=num_dim %}", success=function(data) {
+                    <!--          Inspection_results                         -->
+                    const data_json = JSON.parse(data);
+                    if (data_json['result'] === true) {
+                        var inspection_result = data_json['dimensions'];
+
+                        <!--     Fill in inspection results           -->
+                        fill_results(inspection_result);
+
+                        $('#description-inspection').attr('hidden', true);
+                        $('#auto-inspection').attr('class', 'complete');
+                        $('#stop').attr('hidden', true);
+                        $('#repeat-inspection').attr('hidden', false);
+                    };
                 });
-<!--                var to_view = document.getElementById('description-auto');-->
-<!--                to_view.scrollIntoView({ behavior: "smooth"});-->
-                });
-            });
+        });
       });
 
       $('#stop').on('click', function(e) {
-        location.reload();
+          location.reload();
       });
 
       $('#repeat-inspection').on('click', function(e) {
-        e.preventDefault();
-
-        $('.result').removeAttr('style');
-        $('.clearable').text('');
-        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
-            automatic_inspection();
-        });
+          location.reload();
       });
 
-      function fill_results(inspection_results) {
-        const dimensions = Object.keys(inspection_results)
-        for (let i = 0; i != dimensions.length; i++) {
-            var row_objects = $('#' + dimensions[i] + ' td');
-
-            var measured = inspection_results[dimensions[i]];
-            row_objects[0].textContent = measured;
-
-            var nominal = row_objects[1].textContent;
-
-            var delta = measured - nominal;
-            row_objects[2].textContent = delta.toFixed(2);
-
-            var tolerance_upper, tolerance_lower
-            [tolerance_upper, tolerance_lower] = row_objects[3].textContent.split('/');
-
-            if (delta < tolerance_lower || delta > tolerance_upper) {
-                row_objects[4].textContent = 'Fail';
-                row_objects[4].style.background = 'red';
-            } else {
-                row_objects[4].style.background = 'green';
-                row_objects[4].textContent = 'Pass';
-            };
-        }
-      };
-
-      function automatic_inspection() {
-        $('#auto-inspection').removeClass('complete');
-        $.get(url="{% url 'auto_inspection' %}", success=function(data) {
-            <!--          Inspection_results                         -->
-            const data_json = JSON.parse(data);
-            if (data_json['result'] === true) {
-                var inspection_result = data_json['dimensions'];
-
-                <!--     Fill in inspection results           -->
-                fill_results(inspection_result);
-
-                $('#description-inspection').attr('hidden', true);
-                $('#auto-inspection').attr('class', 'complete');
-                $('#stop').attr('hidden', true);
-                $('#repeat-inspection').attr('hidden', false);
-            } else {
-                alert('Automatic measurement failed. Investigate environment and try again');
-            };
-        });
-      };
     </script>
 {% endblock %}
