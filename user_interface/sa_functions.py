@@ -1,11 +1,6 @@
 import psutil
-import logging
 from lib import SAPyLib as sa
-import pyautogui
 import os
-from pyWinActivate import win_activate
-import json
-import win32gui
 
 
 def check_for_sa_instance():
@@ -36,7 +31,8 @@ def check_for_instrument_connection():
 def open_template_check_connection(template_name):
     collection_name = 'Inspection'
     instrument_id = 0
-    template_path = os.path.join(r'C:\Users\AndreyOcheretianko\OneDrive - ALTO LLC\Lamprell development\SA Templates', template_name + '.xit64')
+    template_path = os.path.join(os.path.abspath('.\SA_templates'), template_name + '.xit64')
+
     sa.open_sa_file(template_path)
     # sa.set_sa_window_state('Hide')
     sa.set_interaction_mode('Automatic', 'Never Halt', 'Allow Application Interaction')
