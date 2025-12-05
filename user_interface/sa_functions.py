@@ -26,6 +26,13 @@ def check_for_sa_instance():
         return True, message
 
 
+def check_for_instrument_connection():
+    if bool(sa.verify_instrument_connection('', 0)):
+        return True
+    else:
+        return False
+
+
 def open_template_check_connection(template_name):
     collection_name = 'Inspection'
     instrument_id = 0
@@ -61,11 +68,16 @@ def measure_pt(collection, group, name, target_type):
 
 
 def close_app():
-    pyautogui.shortcut('alt', 'f4')
-    win_activate(window_title='Lamprell app', partial_match=True)
+    collection = 'Inspection'
+    instrument_id = 0
 
-    pyautogui.shortcut('ctrl', 'c')
-    pyautogui.shortcut('ctrl', 'c')
+    instrument = sa.get_instrument_model(instrument_id)
+
+    if not 'api' in instrument.lower():
+        if sa.verify_instrument_connection(collection, instrument_id):
+            sa.instrument_operational_check(collection, instrument_id, 'Shut Down Tracker')
+
+    os.system('shutdown /s')
 
 
 def cancel_measurement_and_start_new(col, group, profile_name):

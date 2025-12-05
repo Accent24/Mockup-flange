@@ -3103,6 +3103,18 @@ def get_observation_info(collection: str, group: str, name: str, index=0) -> dic
     return results
 
 
+def get_instrument_model(instrument_id):
+    func_name = 'Get Instrument Model'
+
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetColInstIdArg('Instrument ID', '', instrument_id)
+
+    NrkSdk.ExecuteStep()
+    name = NrkSdk.GetStringArg('Name', '0')[1]
+
+    return name
+
+
 def set_instrument_measurement_mode_profile(collection_inst: str, id_inst: int, mode_profile: str) -> None:
     """p1005"""
     func_name = "Set Instrument Measurement Mode/Profile"

@@ -13,6 +13,7 @@ urlpatterns = [
     path('api/measure/<str:collection>/<str:group>/<str:name>/<str:target_type>/', measure, name='measure_target'),
     path('api/template_and_connection/<str:template_name>/', load_and_start, name='load_and_start'),
     path('api/bring_foreground/', bring_window_foreground, name='bring_foreground'),
+    path('api/instrument_test/', test_instrument, name='instrument_connection_test'),
     path('api/sdk_test/', test_sdk, name='api_sdk_test'),
     path('fill_form/update/<int:pk>/', FillFormUpdate.as_view(), name='fill_form_update'),
     path('fill_form/<int:pk>/', FillFormCreate.as_view(), name='fill_form'),

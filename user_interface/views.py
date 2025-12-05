@@ -27,6 +27,11 @@ def test_sdk(request):
     return HttpResponse(connection[0])
 
 
+# API to test if instrument is currently connected to SA
+def test_instrument(request):
+    return HttpResponse(check_for_instrument_connection())
+
+
 def load_and_start(request, template_name):
     message = open_template_check_connection(template_name)
 
@@ -199,6 +204,6 @@ class FlangeInspection(TemplateView):
 
 
 def test(request):
-    sa.show_hide_instrument_interface('Inspection', 0)
-    return HttpResponse('True')
+    # sa.show_hide_instrument_interface('Inspection', 0)
+    return HttpResponse()
 
