@@ -37,7 +37,7 @@ from System.Collections.Generic import List
 import System.Reflection
 
 
-BASE_PATH = r'C:\Users\AndreyOcheretianko\PycharmProjects\SA-SDK-Projects'
+BASE_PATH = os.path.abspath('./')
 DLL_FOLDER = os.path.join(BASE_PATH, "dll")
 
 # Get the logger
