@@ -32,6 +32,10 @@ def test_instrument(request):
     return HttpResponse(check_for_instrument_connection())
 
 
+def stop_instrument_interface(request):
+    return HttpResponse(sa.stop_instrument_interface(collection_inst='Inspection', id_inst=0))
+
+
 def load_and_start(request, template_name):
     message = open_template_check_connection(template_name)
 

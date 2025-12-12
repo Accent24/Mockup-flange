@@ -2911,7 +2911,7 @@ def stop_instrument_interface(collection_inst: str, id_inst: int) -> None:
     NrkSdk.SetStep(func_name)
     NrkSdk.SetColInstIdArg("Instrument's ID", collection_inst, id_inst)
     NrkSdk.ExecuteStep()
-    getResult(func_name)
+    # getResult(func_name)
 
 
 def verify_instrument_connection(collection_inst: str, id_inst: int) -> bool:
