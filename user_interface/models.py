@@ -18,21 +18,25 @@ class MainFunction(models.Model):
         return reverse('FillFormView', kwargs={'pk': self.pk})
 
 
+class Operator(models.Model):
+    full_name = models.CharField(max_length=150, blank=False, verbose_name='Full name of inspector')
+    lamprell_id = models.CharField(max_length=150, blank=False, verbose_name='Lamprell employee ID')
+
+    def __str__(self):
+        return self.full_name
+
+
 class FillForm(models.Model):
     date_time = models.DateTimeField(auto_now=True)
     report_number = models.CharField(max_length=200, blank=False, verbose_name='Report number')
-    employee_id = models.IntegerField(verbose_name='Employee ID')
-    employee_name = models.CharField(max_length=200, blank=False, verbose_name='Employee name')
-    job_number = models.CharField(max_length=200, blank=True, verbose_name='Job number')
-    wo_number = models.CharField(max_length=200, blank=True, verbose_name='Work order number')
+    operator = models.ForeignKey(Operator, on_delete=models.CASCADE, verbose_name='Operator')
+    tp_number = models.IntegerField(blank=False, verbose_name='TP serial number')
+    can_ref = models.CharField(blank=True, verbose_name='CAN reference', choices=list_of_cans, max_length=200, null=True)
     steel_temperature = models.IntegerField(blank=False, verbose_name='Steel temperature')
     fabrication_stage = models.CharField(max_length=200, blank=False, verbose_name='Fabrication stage', choices=list_of_stages)
+
     file_path = models.CharField(max_length=250, blank=False)
     station_name = models.ForeignKey(MainFunction, on_delete=models.CASCADE, verbose_name='Station name')
-
-    can_ref = models.CharField(blank=True, verbose_name='CAN reference', choices=list_of_cans,
-                               max_length=200, null=True)
-
 
     def __str__(self):
         name = '{0} - {1} - {2}'.format(self.station_name, self.report_number,

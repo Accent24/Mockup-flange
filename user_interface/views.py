@@ -112,13 +112,11 @@ class HomePage(ListView):
 class FillFormCreate(CreateView):
     model = FillForm
     template_name = 'user_interface/form.html'
-    fields = ['employee_id',
-              'employee_name',
-              'job_number',
-              'wo_number',
+    fields = ['operator',
+              'tp_number',
+              'can_ref',
               'steel_temperature',
-              'fabrication_stage',
-              'can_ref']
+              'fabrication_stage']
 
 
     def form_valid(self, form):
@@ -136,13 +134,11 @@ class FillFormCreate(CreateView):
 class FillFormUpdate(UpdateView):
     model = FillForm
     template_name = 'user_interface/form.html'
-    fields = ['employee_id',
-              'employee_name',
-              'job_number',
-              'wo_number',
+    fields = ['operator',
+              'tp_number',
+              'can_ref',
               'steel_temperature',
-              'fabrication_stage',
-              'can_ref']
+              'fabrication_stage']
 
 
     def get_context_data(self, **kwargs):

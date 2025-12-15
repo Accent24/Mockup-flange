@@ -224,6 +224,8 @@
       });
 
       $('#stop').on('click', function(e) {
+          $.get(url="{% url 'stop_interface' %}", success=function(data) {
+          });
           location.reload();
       });
 
