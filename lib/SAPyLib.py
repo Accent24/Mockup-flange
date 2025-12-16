@@ -2540,8 +2540,24 @@ def set_relationship_tolerance_vector_type(collection_relationship: str, name_re
 # ###################################
 # Chapter 9 - Reporting Operations ##
 # ##################################
+def set_report_value_from_string(tag_name: str, value: str):
+    func_name = 'Set Report Tag Value From String'
+
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetStringArg('Tag Name', tag_name)
+    NrkSdk.SetStringArg('Tag Value', value)
+
+    NrkSdk.ExecuteStep()
 
 
+def set_report_value_from_integer(tag_name: str, value: int):
+    func_name = 'Set Report Tag Value From Integer'
+
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetStringArg('Tag Name', tag_name)
+    NrkSdk.SetIntegerArg('Tag Value', value)
+
+    NrkSdk.ExecuteStep()
 
 
 def quick_report(collection: str, name: str, reportname: str = "", openreport: bool = True) -> None:
@@ -2658,17 +2674,19 @@ def add_item_to_SA_report_at_location(reportcollection: str, reportname: str, it
     NrkSdk.ExecuteStep()
     getResult(func_name)
     
-def output_SA_report_to_PDF(reportcollection: str, reportname: str, filedirectory: str, filename: str, showpdf: bool):
+def output_SA_report_to_PDF(reportcollection: str, reportname: str, local_path: str, showpdf: bool):
     """p925"""
     func_name = "Output SA Report to PDF"
-    log.debug(func_name)
     NrkSdk.SetStep(func_name)
+
     NrkSdk.SetCollectionObjectNameArg("Report Name", reportcollection, reportname)
-    filepath = filedirectory + "\\" + filename + ".pdf"
-    NrkSdk.SetFilePathArg("File Name", filepath, False)
+
+    file_path = os.path.abspath(local_path)
+    NrkSdk.SetFilePathArg("File Name", file_path, False)
     NrkSdk.SetBoolArg("Show PDF?", showpdf)
+
     NrkSdk.ExecuteStep()
-    getResult(func_name)
+
 
 def output_SA_report_to_excel(reportcollection: str, reportname: str, filedirectory: str, filename: str, showfile: bool):
     """p926"""
@@ -3368,6 +3386,12 @@ def set_interaction_mode(sa_interaction_mode: str, mp_interaction_mode: str, mp_
     getResult(func_name)
 
 
+def refresh_views():
+    func_name = 'Refresh Views'
+    NrkSdk.SetStep(func_name)
+    NrkSdk.ExecuteStep()
+
+
 # ###########################################
 # Chapter 15 - Accumulator Math Operations ##
 # ###########################################
@@ -3414,3 +3438,11 @@ def run_subroutine(path: str, share_var, embedded, expected_return: dict = None)
 # #########################
 # Chapter 19 - Variables ##
 # #########################
+def set_string_var(name, value):
+    func_name = 'Set String Variable'
+
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetStringArg("Name", name)
+    NrkSdk.SetStringArg("Value", value)
+
+    NrkSdk.ExecuteStep()

@@ -235,5 +235,11 @@
           location.reload();
       });
 
+      $('#report').on('click', function(e) {
+          e.preventDefault();
+          $.get(url="{% url 'generate_report' form_pk=form_pk %}", success=function(data) {
+          });
+      });
+
     </script>
 {% endblock %}

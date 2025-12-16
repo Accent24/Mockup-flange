@@ -1,3 +1,4 @@
+from django.template.context_processors import request
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView
 from django.shortcuts import render, redirect, HttpResponse, reverse
 import json
@@ -190,6 +191,27 @@ def bring_window_foreground(request):
     return  HttpResponse()
 
 
+def generate_report(request, form_pk):
+    sa.run_subroutine("Template::report.mp", True, True)
+
+    query_object = FillForm.objects.get(pk=form_pk)
+
+    report_number = 'CN/24/2106/HAM/GL/PL/TP{0}/{1}/DC002'.format(query_object.tp_number, query_object.can_ref)
+    report_tags = {'Tp': str(query_object.tp_number),
+                   'Can': query_object.can_ref,
+                   'Operator': query_object.operator.full_name,
+                   'Temperature': str(query_object.steel_temperature),
+                   'Report number': report_number}
+
+    for k, v in report_tags.items():
+        sa.set_report_value_from_string(k, v)
+
+    sa.output_SA_report_to_PDF('Report', 'Report',
+                               '../Reports/{0}.pdf'.format(report_number.replace('/', '_')), True)
+
+    return HttpResponse()
+
+
 def sys_exit(request):
     close_app()
 
@@ -204,6 +226,6 @@ class FlangeInspection(TemplateView):
 
 
 def test(request):
-    # sa.show_hide_instrument_interface('Inspection', 0)
+
     return HttpResponse()
 

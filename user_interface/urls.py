@@ -23,5 +23,6 @@ urlpatterns = [
     path('home/', HomePage.as_view(), name='home'),
     path('inspection/plate_inspection/<int:pk>/', plate_inspection, name='plate_inspection'),
     path('inspection/flange_inspection/<int:pk>/', flange_inspection, name='flange_inspection'),
+    path('inspection/generate_report/<int:form_pk>/', generate_report, name='generate_report'),
     path('test/', test, name='test'),
 ]
