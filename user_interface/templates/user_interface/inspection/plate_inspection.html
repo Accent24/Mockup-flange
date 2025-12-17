@@ -235,11 +235,24 @@
           location.reload();
       });
 
+      <!--  Pop-up with preview    -->
+      let popUpWindow = null;
       $('#report').on('click', function(e) {
           e.preventDefault();
           $.get(url="{% url 'generate_report' form_pk=form_pk %}", success=function(data) {
+            const windowFeatures = "left=100, top=100, width=1700, height=880, location=no";
+            if (popUpWindow === null) {
+                popUpWindow = window.open('http://127.0.0.1:8000/static/' + data, 'reportPreview', windowFeatures, 'popup');
+                popUpWindow.focus();
+            };
           });
+
+          $('#spinner').attr('hidden', false);
+          $('#generate-report').attr('hidden', true);
       });
 
+      $(window).on('beforeunload', function(e) {
+          popUpWindow.close();
+      });
     </script>
 {% endblock %}

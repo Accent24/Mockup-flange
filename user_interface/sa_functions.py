@@ -88,6 +88,69 @@ def cancel_measurement_and_start_new(col, group, profile_name):
             break
 
 
+def report_generator(form_pk, fill_form_model):
+    sa.run_subroutine("Template::report.mp", True, True)
+
+    query_object = fill_form_model.objects.get(pk=form_pk)
+
+    # prep folders for report
+    base_dir = os.path.abspath('../')
+    if not os.path.isdir(os.path.join(base_dir, 'Reports')):
+        os.mkdir(os.path.join(base_dir, 'Reports'))
+
+    base_dir = os.path.join(base_dir, 'Reports', 'TP{0} {1} {2}'.format(query_object.tp_number,
+                                                                              query_object.can_ref,
+                                                                              query_object.date_time.strftime('%d-%m-%Y %H-%M')))
+
+    if not os.path.isdir(base_dir):
+        os.mkdir(base_dir)
+
+    report_numbering_file = os.path.join(os.path.split(base_dir)[0], 'report_numbering.txt')
+
+    current_report_index = ''
+    if not os.path.isfile(report_numbering_file):
+        with open(report_numbering_file, 'w') as file_write:
+            file_write.write(str(form_pk) + ', ' + str(1) + '\n')
+            current_report_index = str(1)
+    else:
+        with open(report_numbering_file) as file_read:
+            last_line = file_read.readlines()[-1].strip('\n').split(',')
+
+            if not int(last_line[0]) == form_pk:
+                current_report_index = str(int(last_line[1]) + 1)
+
+                with open(report_numbering_file, 'w') as file_write:
+                    file_write.write(str(form_pk) + ', ' + str(current_report_index) + '\n')
+            else:
+                current_report_index = last_line[1].strip(' ')
+
+    if len(current_report_index) == 1:
+        current_report_index = '00' + current_report_index
+    elif len(current_report_index) == 2:
+        current_report_index = '0' + current_report_index
+    else:
+        current_report_index = current_report_index
+
+    report_number = 'CN/24/2106/HAM/GL/PL/TP{0}/{1}/DC{2}'.format(query_object.tp_number, query_object.can_ref,
+                                                                  current_report_index)
+    report_tags = {'Tp': str(query_object.tp_number),
+                   'Can': query_object.can_ref,
+                   'Operator': query_object.operator.full_name,
+                   'Temperature': str(query_object.steel_temperature),
+                   'Report number': report_number}
+
+    for k, v in report_tags.items():
+        sa.set_report_value_from_string(k, v)
+
+    file_path = os.path.join(base_dir, '{0}.pdf'.format(report_number.replace('/', '_')))
+    sa.output_SA_report_to_PDF('Report',
+                               'Report',
+                               file_path,
+                               False)
+
+    static_path_for_preview = os.path.join(os.path.basename(base_dir), os.path.basename(file_path))
+    return static_path_for_preview
+
 list_of_cans = [('MS-CN1', 'MS-CN1'),
                 ('MS-CN2', 'MS-CN2'),
                 ('MS-CN3', 'MS-CN3'),

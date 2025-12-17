@@ -2674,15 +2674,14 @@ def add_item_to_SA_report_at_location(reportcollection: str, reportname: str, it
     NrkSdk.ExecuteStep()
     getResult(func_name)
     
-def output_SA_report_to_PDF(reportcollection: str, reportname: str, local_path: str, showpdf: bool):
+def output_SA_report_to_PDF(reportcollection: str, reportname: str, abs_path: str, showpdf: bool):
     """p925"""
     func_name = "Output SA Report to PDF"
     NrkSdk.SetStep(func_name)
 
     NrkSdk.SetCollectionObjectNameArg("Report Name", reportcollection, reportname)
 
-    file_path = os.path.abspath(local_path)
-    NrkSdk.SetFilePathArg("File Name", file_path, False)
+    NrkSdk.SetFilePathArg("File Name", abs_path, False)
     NrkSdk.SetBoolArg("Show PDF?", showpdf)
 
     NrkSdk.ExecuteStep()
