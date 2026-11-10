@@ -153,9 +153,9 @@ def plate_inspection(request, pk):
 
     form_object = FillForm.objects.get(pk=pk)
 
-    form_dic = serializers.serialize('json', [form_object])
-    tolerance_dic = serializers.serialize('json',
-                                      ProjectNominalAndTolerance.objects.filter(station_name_id=form_object.station_name.pk))
+    # form_dic = serializers.serialize('json', [form_object])
+    # tolerance_dic = serializers.serialize('json',
+    #                                   ProjectNominalAndTolerance.objects.filter(station_name_id=form_object.station_name.pk))
 
     fill_form_query = FillForm.objects.get(pk=pk)
     query_set = ProjectNominalAndTolerance.objects.filter(station_name=fill_form_query.station_name.pk,
@@ -192,6 +192,8 @@ def bring_window_foreground(request):
 
 
 def generate_report(request, form_pk):
+    add_tolerance_to_plate_dimensions(46, FillForm, ProjectNominalAndTolerance)
+    # todo: Refresh callout view in SA report
     report = report_generator(form_pk, FillForm)
 
     return HttpResponse(report)
@@ -211,6 +213,7 @@ class FlangeInspection(TemplateView):
 
 
 def test(request):
+    add_tolerance_to_plate_dimensions(46, FillForm, ProjectNominalAndTolerance)
 
     return HttpResponse()
 

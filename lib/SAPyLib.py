@@ -2560,6 +2560,21 @@ def set_report_value_from_integer(tag_name: str, value: int):
     NrkSdk.ExecuteStep()
 
 
+def set_dimension_tolerance(collection: str, object_name: str, nominal: float, high_tolerance: float, low_tolerance: float):
+    func_name = 'Set Dimension Tolerance'
+
+    NrkSdk.SetStep(func_name)
+    NrkSdk.SetCollectionObjectNameArg('Dimension name', collection, object_name)
+    NrkSdk.SetBoolArg('Enable Nominal', True)
+    NrkSdk.SetBoolArg('Enable High', True)
+    NrkSdk.SetBoolArg('Enable Low', True)
+    NrkSdk.SetDoubleArg('Nominal', nominal)
+    NrkSdk.SetDoubleArg('High Tolerance', high_tolerance)
+    NrkSdk.SetDoubleArg('Low Tolerance', low_tolerance)
+
+    NrkSdk.ExecuteStep()
+
+
 def quick_report(collection: str, name: str, reportname: str = "", openreport: bool = True) -> None:
     """p809"""
     func_name = "Quick Report"

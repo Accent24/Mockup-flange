@@ -2,6 +2,8 @@ import psutil
 from lib import SAPyLib as sa
 import os
 
+from lib.SAPyLib import set_dimension_tolerance
+
 
 def check_for_sa_instance():
     sa_instance_count = 0
@@ -150,6 +152,19 @@ def report_generator(form_pk, fill_form_model):
 
     static_path_for_preview = os.path.join(os.path.basename(base_dir), os.path.basename(file_path))
     return static_path_for_preview
+
+
+def add_tolerance_to_plate_dimensions(form_pk, fill_form_model, project_tolerance_model):
+    # get all the dimension tolerances applied to the plate
+    fill_form_query = fill_form_model.objects.get(pk=form_pk)
+    query_set = project_tolerance_model.objects.filter(station_name=fill_form_query.station_name.pk,
+                                                       can_ref=fill_form_query.can_ref)
+
+    for dimension in query_set:
+        if not dimension.dimension_name.lower() in ['g', 'h', 'i', 'j']:
+            sa.set_dimension_tolerance('Template', dimension.dimension_name.lower(), dimension.nominal,
+                                       dimension.tolerance_upper, dimension.tolerance_lower)
+
 
 list_of_cans = [('MS-CN1', 'MS-CN1'),
                 ('MS-CN2', 'MS-CN2'),
