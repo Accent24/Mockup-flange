@@ -50,6 +50,8 @@ cd "C:\Users\AndreyOcheretianko\PycharmProjects\SA-SDK-Projects"
     @set _OLD_CODEPAGE=
 )
 
+start cmd.exe /c start "start SA" /D "C:\Program Files (x86)\New River Kinematics\SpatialAnalyzer 2023.2.0926.6\x64\" "Spatial Analyzer64.exe" "-MINIMIZE"
+timeout /t 8
 start cmd.exe /c "start chrome.exe -kiosk "http://127.0.0.1:8000/"
 python manage.py runserver
 
