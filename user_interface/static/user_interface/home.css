@@ -2,23 +2,39 @@ h1 {
     color: red;
 }
 
-.function {
-    height: 200px;
+.text-center {
+    padding: 40px;
+}
+
+.function a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(314deg,rgba(235, 245, 248, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height: 300px;
     align-content: center;
 
     font-size: 40px;
-    font-family: "Arial-Bold";
+    font-family: "SANS-SERIF";
 
     border: solid;
-    border-width: 2px;
+    border-color: white;
+    border-width: 8px;
+    border-radius: 50px;
 
-    padding: 0px;
+    padding: 10px;
+    margin: 20px;
+}
+
+.function img {
+    width: 220px;
 }
 
 a  {
     display: block;
-    height: 100%;
-    width: 100%;
     text-decoration: none;
     align-content: center;
 

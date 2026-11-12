@@ -11,9 +11,13 @@
         <div class="col">
           <div class="function">
               {% if function.view_name %}
-              <a href="{% url 'fill_form' pk=function.pk %}">{{ function.name }}</a>
+              <a href="{% url 'fill_form' pk=function.pk %}">
+                  <img src="{% static 'images/bcd_marking.png' %}">
+                  {{ function.name }}</a>
               {% else %}
-              <a href="">{{ function.name }}</a>
+              <a href="">
+                  <img src="{% static 'images/bcd_marking.png' %}">
+                  {{ function.name }}</a>
               {% endif %}
           </div>
         </div>

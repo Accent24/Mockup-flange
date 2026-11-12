@@ -11,28 +11,69 @@ main {
     display: flex;
     justify-content: space-around;
 
-    padding: 0px;
+    padding: 15px;
     font-size: 20px;
-    margin: 5px;
+    margin-top: 10px;
+
+    background-color: rgb(248,248,248);
+    border: solid;
+
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: rgb(230,230,230);
 }
 
 .footer-button a {
+    width: 280px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+
     text-decoration: none;
     text-align: center;
     align-items: center;
 
-    size: 20px;
-    color: blue;
+    font-size: 20px;
+    color: black;
 
-    padding: 5px;
+    padding: 10px;
+
+    border-style: solid;
+    border-color: rgb(230,230,230);
+    border-width: 3px;
+    border-radius: 30px;
+
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 4px 0 rgba(0, 0, 0, 0.19);
 }
-
-
 
 .footer-button a img {
     width: 64px;
+    padding: 5px;
+}
+
+.footer-button a span {
+    padding-left: 5px;
+}
+
+.col {
+    border: solid;
+    border-color: white;
+    border-width: 3px;
+    border-radius: 50px;
+
+    margin: 20px;
+
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 
 .flow {

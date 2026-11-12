@@ -12,8 +12,7 @@ ul {
     list-style: none;
 }
 
-ul li {
-    width: 100%;
+ul .row {
     font-size: 27px;
     text-align: left;
 
@@ -45,8 +44,6 @@ ul li {
 
 .description {
     padding: 5px;
-    display: flex;
-    flex-direction: column;
 
     text-align: center;
     align-items: center;
@@ -73,7 +70,7 @@ li button {
 }
 
 .overview img {
-    width: 75vh;
+    width: 50vh;
 }
 
 .table {
@@ -83,4 +80,31 @@ li button {
 
 .table>:not(caption)>*>* {
     padding: 5px; !important
+}
+
+ol {
+    margin-bottom: 10px !important;
+    text-align: left;
+}
+
+#measure-h001 {
+    background: none;
+    border: none;
+}
+
+.align-button {
+    justify-content: center !important;
+}
+
+#measure-h001 {
+    margin: 10px;
+}
+
+#measure-h001 span {
+    color: red;
+    padding: 2px;
+}
+
+.left {
+    margin-left: 230px !important;
 }

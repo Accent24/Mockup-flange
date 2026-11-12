@@ -1,0 +1,395 @@
+{% extends "user_interface/base.html" %}
+
+{% load static %}
+{% load tags %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'user_interface/inspection/tp_assembled_final_dc/tp_final.css' %}">
+<link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main class="content">
+    <h1>TP Assembled - Final DC in Horizontal orientation</h1>
+    <div class="container-flex text-center">
+      <div class="row align-items-start">
+        <div class="col">
+          <h2>Inspection flow</h2>
+          <ul class="flow">
+              <li id="instrument-connection" class="row">
+                  <span>Load template and start</span>
+                  <div id="description-temp"  class="description" hidden>
+                      <p>Loading template file and connecting to the instrument.</p>
+                      <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </li>
+              <li id="plane" class="row">
+                  <span>Measure UF Face</span>
+                  <div id="description-plane"  class="description" hidden>
+                      <ol class="operation">
+                          <li>
+                              <div class="description-row">
+                                  <span>Follow the sketch and use laser tracker camera to locate required points on flange surface</span>
+                                  <img class="description-img" src="{% static 'user_interface/inspection/tp_assembled_final_dc/plane_sketch.png' %}">
+                              </div>
+                          </li>
+                          <li>Press measure button to record the point</li>
+                      </ol>
+                      <div class="button-container">
+                          <button id="measure-plane">
+                              <img src="{% static 'icons/play.png' %}">
+                              <div class="spinner-border text-primary" style="width: 55px; height: 55px;" role="status" hidden>
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                          </button>
+                          <p>Number of points measured: <b><span id="point-count-plane"> 0</span>/3</b></p>
+                      </div>
+                  </div>
+              </li>
+              <li id="inner-diameter" class="row">
+                  <span>Measure UF ID</span>
+                  <div id="description-id"  class="description" hidden>
+                      <ol class="operation">
+                          <li>
+                              <div class="description-row">
+                                  <span>Follow the sketch and use laser tracker camera to locate required points on flange surface</span>
+                                  <img class="description-img" src="{% static 'user_interface/inspection/tp_assembled_final_dc/id_sketch.png' %}">
+                              </div>
+                          </li>
+                          <li>Press measure button to record the point</li>
+                      </ol>
+                      <div class="button-container">
+                          <button id="measure-id">
+                              <img src="{% static 'icons/play.png' %}">
+                              <div class="spinner-border text-primary" style="width: 55px; height: 55px;" role="status" hidden>
+                                <span class="visually-hidden">Loading...</span>
+                              </div>
+                          </button>
+                          <p>Number of points measured: <b><span id="point-count-id">0</span>/3</b></p>
+                      </div>
+                  </div>
+              </li>
+              <li id="0deg" class="row">
+                  <span>Measure H001</span>
+                  <div id="description-0deg" class="description" hidden>
+                      <ol class="operation">
+                          <li>
+                              <div class="description-row">
+                                  <span>Guide laser to the sphere adapter installed in H001</span>
+                                  <img class="description-img" src="{% static 'user_interface/inspection/tp_assembled_final_dc/H001.png' %}" style="width:30vw;">
+                              </div>
+                          </li>
+                          <li>Put the laser on the surface of the sphere</li>
+                          <li>Press measure button to record the point</li>
+                      </ol>
+                      <button id="measure-0deg">
+                          <img src="{% static 'icons/play.png' %}">
+                          <div class="spinner-border text-primary" style="width: 55px; height: 55px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </li>
+              <li id="auto-alignment" class="row">
+                  <span>Automatic alignment</span>
+                  <div id="description-auto" class="description" hidden>
+                      <p>Automatic alignment is ongoing. Please stand-by...</p>
+                      <p id="remaining-time-alignment">Remaining time: 0 minutes 0 seconds</p>
+                      <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <div id="progress-alignment" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                      </div>
+                  </div>
+              </li>
+              <li id="auto-inspection" class="row">
+                  <span>Automatic inspection</span>
+                  <div id="description-inspection" class="description" hidden>
+                      <p>Automatic inspection is ongoing. Please stand-by...</p>
+                      <p id="remaining-time-inspection">Remaining time: 0 minutes 0 seconds</p>
+                      <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <div id="progress-inspection" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                      </div>
+                  </div>
+              </li>
+              <li class="row"><span>Program completed. Verify results!</span></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2>Quick result overview</h2>
+          <div class="overview">
+              <img src="{% static 'user_interface/inspection/tp_assembled_final_dc/TP_Final_DC.png' %}">
+              <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Ref.</th>
+                      <th scope="col">Actual</th>
+                      <th scope="col">Required</th>
+                      <th scope="col">Delta</th>
+                      <th scope="col">Tolerance</th>
+                      <th scope="col">Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in required_n_tolerance_list %}
+                    <tr id="{{ item.dimension_name }}">
+                      <th scope="row">{{ item.dimension_name|upper }}</th>
+                      <td class="clearable"></td>
+                      <td>{{ item.nominal }}</td>
+                      <td class="clearable"></td>
+                      <td>{% prep_tolerance_str item.tolerance_upper item.tolerance_lower %}</td>
+                      <td class="clearable result"></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+
+{% include 'user_interface/footer.html' %}
+    <script>
+      $("#start").on("click", function(e) {
+        e.preventDefault();
+        $('#start').attr('hidden', true);
+        $('#stop').attr('hidden', false);
+        $('#description-temp').attr('hidden', false);
+
+        <!--  open template and start instrument  -->
+        $.get(url="{% url 'load_and_start' template_name='tp assembled - final' %}", success=function(data) {
+            var result = data;
+            var img_selection = $("img.instrument-connection");
+
+            if (result === 'True') {
+                img_selection.attr("src", "{% static 'icons/check.png' %}");
+                $('#description-temp').attr('hidden', true);
+                $('#instrument-connection').addClass('complete');
+                $('#description-plane').attr('hidden', false);
+                $.get(url="{% url 'ovc' %}");
+                document.getElementById('plane').scrollIntoView(false, {behavior: "smooth"});
+                } else {
+                alert('Problem with instrument connection!')
+                img_selection.attr("src", "{% static 'icons/mark.png' %}");
+                };
+            });
+        <!--    measure pt plane        -->
+        var points_plane = 0;
+        $('#measure-plane').on('click', function(e) {
+            $('#measure-plane img').attr('hidden', true);
+            $('#measure-plane .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment - plane' name=' ' target_type='retro' %}", success=function(data) {
+                $.get(url="{% url 'ovc' %}");
+                $('#measure-plane img').attr('hidden', false);
+                $('#measure-plane .spinner-border').attr('hidden', true);
+
+                points_plane = points_plane + 1
+                $('#point-count-plane').text(points_plane);
+
+                if (points_plane == 3) {
+                    $('#description-plane').attr('hidden', true);
+                    $('#plane').addClass('complete');
+                    $('#description-id').attr('hidden', false);
+                    document.getElementById('inner-diameter').scrollIntoView(false, {behavior: "smooth"});
+                };
+            });
+        });
+
+        <!--    measure pt ID       -->
+        var points_id = 0;
+        $('#measure-id').on('click', function(e) {
+            $('#measure-id img').attr('hidden', true);
+            $('#measure-id .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment - circle' name=' ' target_type='retro' %}", success=function(data) {
+                $.get(url="{% url 'ovc' %}");
+                $('#measure-id img').attr('hidden', false);
+                $('#measure-id .spinner-border').attr('hidden', true);
+
+                points_id = points_id + 1
+                $('#point-count-id').text(points_id);
+
+                if (points_id == 3) {
+                    $('#description-id').attr('hidden', true);
+                    $('#inner-diameter').addClass('complete');
+                    $('#description-0deg').attr('hidden', false);
+                    document.getElementById('0deg').scrollIntoView(false, {behavior: "smooth"});
+                };
+
+            });
+        });
+
+        <!--      Measure 0 deg         -->
+        $('#measure-0deg').on('click', function(e) {
+            $('#measure-0deg img').attr('hidden', true);
+            $('#measure-0deg .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'run_subroutine' col_mp_name='Template::H001 measurement.mp' %}", success=function(data) {
+                if (data === 'True') {
+                    $('#description-0deg').attr('hidden', true);
+                    $('#0deg').addClass('complete');
+                    $('#description-auto').attr('hidden', false);
+
+                    $.get(url="{% url 'rough_alignment' %}", success=function(data) {
+                        $.get(url="{% url 'auto_alignment' %}", success=function(data) {
+                            $('#description-auto').attr('hidden', true);
+                            $('#auto-alignment').addClass('complete');
+                            $('#description-inspection').attr('hidden', false);
+                            <!--               Automatic inspection                 -->
+                            check_and_recconnect_instrument();
+                        });
+
+                        <!--   Time to execute auto alignment in seconds     -->
+                        var time_to_finish = 140;
+
+                        let remaining_time = time_to_finish;
+                        let current_progress = 0;
+                        let step = 100 / time_to_finish;
+
+                        $('#remaining-time-alignment').text('Remaining time: ' + Math.floor(remaining_time / 60) + ' minutes ' + Math.floor(remaining_time % 60) + ' seconds');
+
+                        var count_down = setInterval(function() {
+                            if (remaining_time == 0) {
+                                clearInterval(count_down)
+                            };
+
+                            $('#progress-alignment').css('width', current_progress + '%');
+
+                            let minutes = Math.floor(remaining_time / 60);
+                            let seconds = Math.floor(remaining_time % 60);
+
+                            $('#remaining-time-alignment').text('Remaining time: ' + minutes + ' minutes ' + seconds + ' seconds');
+
+                            current_progress = current_progress + step;
+                            remaining_time = remaining_time - 1;
+                        }, 1000);
+                    });
+                } else {
+                    $('#measure-0deg img').attr('hidden', false);
+                    $('#measure-0deg .spinner-border').attr('hidden', true);
+                    alert('Sphere measurement failed! Please reposition laser on H001 Sphere surface and try again.');
+                };
+            });
+        });
+      });
+
+      function check_and_recconnect_instrument() {
+          $.get(url="{% url 'instrument_connection_test' %}", success=function(data) {
+            if (data !== 'True') {
+                $.get(url="{% url 'start_interface' %}", success=function(data) {
+                    $.get(url="{% url 'ovc' %}", success=function(data) {
+                        automatic_inspection();
+                    });
+                });
+            } else {
+                $.get(url="{% url 'ovc' %}", success=function(data) {
+                    automatic_inspection();
+                });
+            };
+          });
+      };
+
+      function automatic_inspection() {
+        $('#auto-inspection').removeClass('complete');
+        $.get(url="{% url 'run_subroutine' col_mp_name='Template::inspection_UF.mp' %}", success=function(data) {
+            $.get(url="{% url 'start_interface' %}", success=function(data) {
+                $.get(url="{% url 'ovc' %}", success=function(data) {
+                    $.get(url="{% url 'run_subroutine' col_mp_name='Template::inspection_LF.mp' %}", success=function(data) {
+                        $.get(url="{% url 'start_interface' %}", success=function(data) {
+                            $.get(url="{% url 'ovc' %}", success=function(data) {
+                                $.get(url="{% url 'auto_inspection' num_dim=num_dim %}", success=function(mp_data) {
+                                    $.get(url="{% url 'close_ovc' %}", success=function(data) {});
+                                    <!--          Inspection_results                         -->
+                                    const data_json = JSON.parse(mp_data);
+                                    if (data_json['result'] === true) {
+                                        var inspection_result = data_json['dimensions'];
+
+                                        <!--     Fill in inspection results           -->
+                                        fill_results(inspection_result);
+
+                                        $('#description-inspection').attr('hidden', true);
+                                        $('#auto-inspection').addClass('complete');
+                                        $('#stop').attr('hidden', true);
+                                        $('#repeat-inspection').attr('hidden', false);
+                                    } else {
+                                        alert('Automatic measurement failed. Investigate environment and try again');
+                                    };
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+        <!--   Time to execute auto inspection in seconds     -->
+        const flange_reference = '{{ template_to_load }}';
+        var time_to_finish = 0;
+
+        if (flange_reference.includes('upper')) {
+            time_to_finish = 430;
+        } else {
+            time_to_finish = 360;
+        };
+
+        let remaining_time = time_to_finish;
+        let current_progress = 0;
+        let step = 100 / time_to_finish;
+
+        $('#remaining-time-inspection').text('Remaining time: ' + Math.floor(remaining_time / 60) + ' minutes ' + Math.floor(remaining_time % 60) + ' seconds');
+
+        var count_down = setInterval(function() {
+            if (remaining_time == 0) {
+                clearInterval(count_down)
+            };
+
+            $('#progress-inspection').css('width', current_progress + '%');
+
+            let minutes = Math.floor(remaining_time / 60);
+            let seconds = Math.floor(remaining_time % 60);
+
+            $('#remaining-time-inspection').text('Remaining time: ' + minutes + ' minutes ' + seconds + ' seconds');
+
+            current_progress = current_progress + step;
+            remaining_time = remaining_time - 1;
+        }, 1000);
+      };
+
+      $('#stop').on('click', function(e) {
+        $.get(url="{% url 'stop_interface' %}", success=function(data) {
+        });
+        location.reload();
+      });
+
+      $('#repeat-inspection').on('click', function(e) {
+        e.preventDefault();
+        popUpWindow = null;
+
+        $('.result').removeAttr('style');
+        $('#description-inspection').attr('hidden', false);
+        $('.clearable').text('');
+        $('#spinner').attr('hidden', true);
+        $('#generate-report').attr('hidden', false);
+        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
+            check_and_recconnect_instrument();
+        });
+      });
+
+      <!--  Pop-up with preview    -->
+      let popUpWindow = null;
+      $('#report').on('click', function(e) {
+          e.preventDefault();
+          $.get(url="{% url 'generate_report' form_pk=form_pk %}", success=function(data) {
+            const windowFeatures = "left=100, top=100, width=1700, height=880, location=no";
+            if (popUpWindow == null) {
+                popUpWindow = window.open('http://127.0.0.1:8000/static/' + data, 'reportPreview', windowFeatures, 'popup');
+                popUpWindow.focus();
+            };
+          });
+
+          $('#spinner').attr('hidden', false);
+          $('#generate-report').attr('hidden', true);
+      });
+
+      $(window).on('beforeunload', function(e) {
+          popUpWindow.close();
+      });
+    </script>
+{% endblock %}

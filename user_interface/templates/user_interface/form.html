@@ -9,26 +9,73 @@
       <div class="row align-items-center">
         <div class="col" id="in-form">
             <form method="post" action="">{% csrf_token %}
-                <h1>Inpection registration form for {{ station_name }} </h1>
-                <ul>
-                {{ form.as_ul }}
-                </ul>
-                <button type="submit">
-                    <img src="{% static 'icons/right.png' %}">
-                    <span>Save and proceed</span>
-                </button>
+                <div class="title">
+                    <h1>Inpection registration form for {{ station_name }} </h1>
+                </div>
+                <div class="form-ui">
+                    <ul>
+                    {{ form.as_ul }}
+                    </ul>
+                    <div class="form-footer">
+                        <button type="submit">
+                            <span>Save and proceed</span>
+                            <img src="{% static 'icons/right.png' %}">
+                        </button>
+                    </div>
+                </div>
             </form>
         </div>
-        <div class="col picture">
+        <div class="col col-4 picture">
             <img src="{% static 'icons/registration.png' %}">
         </div>
       </div>
     </div>
     <script>
         $(function() {
-            if (!$('h1').text().includes('Plate inspection')) {
+            if ($('h1').text().includes('Flange') && $('h1').text().toLowerCase().includes('fit')) {
                 $('#id_can_ref').parent().hide();
+                $('#id_production_machine').parent().hide();
+                $('#id_plate_thickness').parent().hide();
+                $('#id_passes_inside').parent().hide();
+                $('#id_material_deposited_inside').parent().hide();
+                $('#id_passes_outside').parent().hide();
+                $('#id_material_deposited_outside').parent().hide();
+            } else if ($('h1').text().includes('CAN inspection')) {
+                $('#id_production_machine').parent().hide();
+                $('#id_passes_inside').parent().hide();
+                $('#id_material_deposited_inside').parent().hide();
+                $('#id_passes_outside').parent().hide();
+                $('#id_material_deposited_outside').parent().hide();
+                $('#id_flange_ref').parent().hide();
+            }  else if ($('h1').text().includes('Plate')) {
+                $('#id_plate_thickness').parent().hide();
+                $('#id_passes_inside').parent().hide();
+                $('#id_material_deposited_inside').parent().hide();
+                $('#id_passes_outside').parent().hide();
+                $('#id_material_deposited_outside').parent().hide();
+                $('#id_flange_ref').parent().hide();
+            } else if ($('h1').text().includes('welding monitoring')) {
+                $('#id_can_ref').parent().hide();
+                $('#id_plate_thickness').parent().hide();
+            } else if ($('h1').text().includes('TP Assembled')) {
+                $('#id_can_ref').parent().hide();
+                $('#id_production_machine').parent().hide();
+                $('#id_plate_thickness').parent().hide();
+                $('#id_passes_inside').parent().hide();
+                $('#id_material_deposited_inside').parent().hide();
+                $('#id_passes_outside').parent().hide();
+                $('#id_material_deposited_outside').parent().hide();
+                $('#id_flange_ref').parent().hide();
+            } else {
+                $('#id_can_ref').parent().hide();
+                $('#id_production_machine').parent().hide();
+                $('#id_plate_thickness').parent().hide();
+                $('#id_passes_inside').parent().hide();
+                $('#id_material_deposited_inside').parent().hide();
+                $('#id_passes_outside').parent().hide();
+                $('#id_material_deposited_outside').parent().hide();
             };
+
         });
     </script>
 {% endblock %}

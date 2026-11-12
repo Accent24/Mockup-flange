@@ -1,0 +1,464 @@
+{% extends "user_interface/base.html" %}
+
+{% load static %}
+{% load tags %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'user_interface/inspection/flange_fit_up/flange_inspection.css' %}">
+<link rel="stylesheet" href="{% static 'user_interface/inspection.css' %}">
+{% endblock %}
+
+{% block content %}
+    <main class="content">
+    <h1>{{ flange_reference|title }} inspection program</h1>
+    <div class="container-flex text-center">
+      <div class="row align-items-start">
+        <div class="col">
+          <h2>Inspection flow</h2>
+          <ul class="flow">
+              <li id="instrument-connection" class="row">
+                  <span>Load template and start</span>
+                  <div id="description-temp"  class="description" hidden>
+                      <p>Loading template file and connecting to the instrument.</p>
+                      <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                      </div>
+                  </div>
+              </li>
+              <li id="point-a" class="row">
+                  <span>Measure point A for rough alignment</span>
+                  <div id="description-a"  class="description" hidden>
+                      <p>Guide laser to point A, click on it in the laser tracker view window. Press Play button to measure</p>
+                      <button id="measure-a">
+                          <img src="{% static 'icons/play.png' %}">
+                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </li>
+              <li id="point-b" class="row">
+                  <span>Measure point B for rough alignment</span>
+                  <div id="description-b" class="description" hidden>
+                      <p>Guide laser to point B, click on it in the laser tracker view window. Press Play button to measure</p>
+                      <button id="measure-b">
+                          <img src="{% static 'icons/play.png' %}">
+                          <div class="spinner-border text-primary" style="width: 30px; height: 30px;" role="status" hidden>
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </li>
+              <li id="auto-alignment" class="row">
+                  <span>Automatic alignment</span>
+                  <div id="description-auto" class="description" hidden>
+                      <p>Automatic alignment is ongoing. Please stand-by...</p>
+                      <p id="remaining-time-alignment">Remaining time: 0 minutes 0 seconds</p>
+                      <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <div id="progress-alignment" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                      </div>
+                  </div>
+              </li>
+              <li id="auto-inspection" class="row">
+                  <span>Automatic inspection</span>
+                  <div id="description-inspection" class="description" hidden>
+                      <p>Automatic inspection is ongoing. Please stand-by...</p>
+                      <p id="remaining-time-inspection">Remaining time: 0 minutes 0 seconds</p>
+                      <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                        <div id="progress-inspection" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                      </div>
+                  </div>
+              </li>
+              {% if 'Lower' in flange_reference %}
+              <li id="manual-inspection" class="row">
+                  <span>Manual inspection</span>
+                  <div id="description-manual-inspection" class="description" hidden>
+                      <ol class="operation">
+                          <li>
+                              <span>Take RRR 1.5" and remote control</span>
+                          </li>
+                          <li>
+                              <span>Position RRR 1.5" on the surface of the flange following 60pts layout</span>
+                          </li>
+                          <li>
+                              <span>Make sure Laser Tracker has green LED ON and locked on the target</span>
+                          </li>
+                          <li>
+                              <span>Press Middle button on remote control and wait for Laser LED to blink</span>
+                          </li>
+                          <li>
+                              <span>Repeat the operation to acquire all 120 pts (60 inside/60 outside)</span>
+                          </li>
+                          <li>
+                              <spsn>Press Next when complete</spsn>
+                          </li>
+                      </ol>
+                      <div id="button-container">
+                          <p>Number of points measured: <b><span id="point-count">0</span>/120</b></p>
+                          <button id="measure-plane">
+                              <img src="{% static 'icons/right.png' %}">
+                              <div class="spinner-border text-primary" style="width: 55px; height: 55px;" role="status" hidden>
+                                  <span class="visually-hidden">Loading...</span>
+                              </div>
+                          </button>
+                      </div>
+                  </div>
+              </li>
+              {% endif %}
+              <li class="row"><span>Program completed. Verify results!</span></li>
+          </ul>
+        </div>
+        <div class="col">
+          <h2>Quick result overview</h2>
+          <div class="overview">
+              <img src="{% static 'user_interface/inspection/flange_fit_up/lower_flange.png' %}">
+              <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Ref.</th>
+                      <th scope="col">Actual</th>
+                      <th scope="col">Required</th>
+                      <th scope="col">Delta</th>
+                      <th scope="col">Tolerance</th>
+                      <th scope="col">Result</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in required_n_tolerance_list %}
+                    <tr id="{{ item.dimension_name }}">
+                      <th scope="row">{{ item.dimension_name|upper }}</th>
+                      <td class="clearable"></td>
+                      <td>{{ item.nominal }}</td>
+                      <td class="clearable"></td>
+                      <td>{% prep_tolerance_str item.tolerance_upper item.tolerance_lower %}</td>
+                      <td class="clearable result"></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="manual_alignment_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered left" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Automatic alignment failed!</h5>
+          </div>
+          <div class="modal-body">
+              <span>Position laser on the surface of sphere installed in H001 and then press measure button</span>
+          </div>
+          <div class="modal-footer align-button">
+              <button id="measure-h001">
+                  <img src="{% static 'icons/right.png' %}">
+                  <div class="spinner-border text-primary" style="width: 55px; height: 55px;" role="status" hidden>
+                      <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <div id="measure-h001-fail" hidden>
+                      <span>Sphere measurement failed! Please reposition laser on H001 Sphere surface and try again.</span>
+                  </div>
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+{% include 'user_interface/footer.html' %}
+    <script>
+      $("#start").on("click", function(e) {
+        e.preventDefault();
+        $('#start').attr('hidden', true);
+        $('#stop').attr('hidden', false);
+        $('#description-temp').attr('hidden', false);
+
+        <!--  open template and start instrument  -->
+        $.get(url="{% url 'load_and_start' template_name=template_to_load %}", success=function(data) {
+            var result = data;
+            var img_selection = $("img.instrument-connection");
+
+            if (result === 'True') {
+                img_selection.attr("src", "{% static 'icons/check.png' %}");
+                $('#description-temp').attr('hidden', true);
+                $('#instrument-connection').addClass('complete');
+                $('#description-a').attr('hidden', false);
+                $.get(url="{% url 'ovc' %}");
+                } else {
+                alert('Problem with instrument connection!')
+                img_selection.attr("src", "{% static 'icons/mark.png' %}");
+                };
+            });
+        <!--    measure pt A        -->
+        $('#measure-a').on('click', function(e) {
+            $('#measure-a img').attr('hidden', true);
+            $('#measure-a .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='A' target_type='smr' %}", success=function(data) {
+                $('#description-a').attr('hidden', true);
+                $('#point-a').addClass('complete');
+                $.get(url="{% url 'ovc' %}");
+                $('#description-b').attr('hidden', false);
+                });
+            });
+
+        <!--    measure pt B       -->
+        $('#measure-b').on('click', function(e) {
+            $('#measure-b img').attr('hidden', true);
+            $('#measure-b .spinner-border').attr('hidden', false);
+            $.get(url="{% url 'measure_target' collection='Inspection' group='Rough alignment' name='B' target_type='smr' %}", success=function(data) {
+                $('#description-b').attr('hidden', true);
+                $('#point-b').addClass('complete');
+                $.get(url="{% url 'close_ovc' %}", success=function(data) {
+                    $('#description-auto').attr('hidden', false);
+                    $.get(url="{% url 'rough_alignment' %}", success=function(data) {
+                        $.get(url="{% url 'auto_alignment' %}", success=function(data) {
+                            if (data === 'True') {
+                                $('#description-auto').attr('hidden', true);
+                                $('#auto-alignment').addClass('complete');
+                                $('#description-inspection').attr('hidden', false);
+                                <!--               Automatic inspection                 -->
+                                check_and_recconnect_instrument();
+                            } else {
+                                if ('{{ template_to_load }}'.includes('upper')) {
+                                    alert('Automatic alignment failed. There are less than 3 spheres recognised');
+                                } else {
+                                    $.get(url="{% url 'ovc' %}");
+                                    $('#manual_alignment_modal').modal('show');
+                                };
+                            };
+                        });
+                        countdown_auto_alignment();
+                    });
+                });
+            });
+        });
+      });
+
+      function check_and_recconnect_instrument() {
+          $.get(url="{% url 'instrument_connection_test' %}", success=function(data) {
+            if (data !== 'True') {
+                $.get(url="{% url 'start_interface' %}", success=function(data) {
+                    $.get(url="{% url 'ovc' %}", success=function(data) {
+                        if ('{{ flange_reference }}'.includes('Lower')) {
+                            $.get(url="{% url 'auto_bcd' %}", success=function(data) {
+                                $('#manual-inspection').removeClass('complete');
+                                $('#description-inspection').attr('hidden', true);
+                                $('#auto-inspection').addClass('complete');
+                                $('#description-manual-inspection').attr('hidden', false);
+                                document.getElementById('manual-inspection').scrollIntoView(false, {behavior: "smooth"});
+                            });
+                        } else {
+                            automatic_inspection();
+                        };
+                    });
+                });
+            } else {
+                $.get(url="{% url 'ovc' %}", success=function(data) {
+                    if ('{{ flange_reference }}'.includes('Lower')) {
+                        countdown_auto_inspection();
+                        $.get(url="{% url 'auto_bcd' %}", success=function(data) {
+                            $('#manual-inspection').removeClass('complete');
+                            $('#description-inspection').attr('hidden', true);
+                            $('#auto-inspection').addClass('complete');
+                            $('#description-manual-inspection').attr('hidden', false);
+                            document.getElementById('manual-inspection').scrollIntoView(false, {behavior: "smooth"});
+                        });
+                    } else {
+                        automatic_inspection();
+                    };
+                });
+            };
+          });
+      };
+
+      function automatic_inspection() {
+        $('#auto-inspection').removeClass('complete');
+        $.get(url="{% url 'auto_inspection' num_dim=num_dim %}", success=function(data) {
+            $.get(url="{% url 'close_ovc' %}", success=function(data) {});
+            <!--          Inspection_results                         -->
+            const data_json = JSON.parse(data);
+            if (data_json['result'] === true) {
+                var inspection_result = data_json['dimensions'];
+
+                <!--     Fill in inspection results           -->
+                fill_results(inspection_result);
+
+                $('#description-inspection').attr('hidden', true);
+                $('#auto-inspection').addClass('complete');
+                $('#stop').attr('hidden', true);
+                $('#repeat-inspection').attr('hidden', false);
+            } else {
+                alert('Automatic measurement failed. Investigate environment and try again');
+            };
+        });
+
+        countdown_auto_inspection();
+      };
+
+      function countdown_auto_inspection() {
+        <!--   Time to execute auto inspection in seconds     -->
+        var time_to_finish = 0;
+
+        if ('{{ template_to_load }}'.includes('upper')) {
+            time_to_finish = 520;
+        } else {
+            time_to_finish = 180;
+        };
+
+        let remaining_time = time_to_finish;
+        let current_progress = 0;
+        let step = 100 / time_to_finish;
+
+        $('#remaining-time-inspection').text('Remaining time: ' + Math.floor(remaining_time / 60) + ' minutes ' + Math.floor(remaining_time % 60) + ' seconds');
+
+        var count_down = setInterval(function() {
+            if (remaining_time == 0) {
+                clearInterval(count_down)
+            };
+
+            $('#progress-inspection').css('width', current_progress + '%');
+
+            let minutes = Math.floor(remaining_time / 60);
+            let seconds = Math.floor(remaining_time % 60);
+
+            $('#remaining-time-inspection').text('Remaining time: ' + minutes + ' minutes ' + seconds + ' seconds');
+
+            current_progress = current_progress + step;
+            remaining_time = remaining_time - 1;
+        }, 1000);
+      };
+
+      function countdown_auto_alignment() {
+        <!--   Time to execute auto alignment in seconds     -->
+        var time_to_finish = 0;
+
+        if ('{{ template_to_load }}'.includes('upper')) {
+            time_to_finish = 90;
+        } else {
+            time_to_finish = 140;
+        };
+
+        let remaining_time = time_to_finish;
+        let current_progress = 0;
+        let step = 100 / time_to_finish;
+
+        $('#remaining-time-alignment').text('Remaining time: ' + Math.floor(remaining_time / 60) + ' minutes ' + Math.floor(remaining_time % 60) + ' seconds');
+
+        var count_down = setInterval(function() {
+            if (remaining_time == 0) {
+                clearInterval(count_down)
+            };
+
+            $('#progress-alignment').css('width', current_progress + '%');
+
+            let minutes = Math.floor(remaining_time / 60);
+            let seconds = Math.floor(remaining_time % 60);
+
+            $('#remaining-time-alignment').text('Remaining time: ' + minutes + ' minutes ' + seconds + ' seconds');
+
+            current_progress = current_progress + step;
+            remaining_time = remaining_time - 1;
+        }, 1000);
+      };
+
+      $('#stop').on('click', function(e) {
+        $.get(url="{% url 'stop_interface' %}", success=function(data) {
+        });
+        location.reload();
+      });
+
+      $('#repeat-inspection').on('click', function(e) {
+        e.preventDefault();
+        popUpWindow = null;
+        point_count = 0;
+        $('.result').removeAttr('style');
+        $('#description-inspection').attr('hidden', false);
+        $('.clearable').text('');
+        $('#spinner').attr('hidden', true);
+        $('#generate-report').attr('hidden', false);
+        $('#auto-inspection').removeClass('complete');
+        $('#manual-inspection').removeClass('complete');
+        $.get(url="{% url 'clear_measurement' %}", success=function(data) {
+            check_and_recconnect_instrument();
+        });
+      });
+
+      <!--   Manual measurement of plane   -->
+      var point_count = 0
+      $(window).on('keydown', function(e) {
+        if (e.keyCode == 39) {
+            $('#measure-plane img').attr('hidden', true);
+            $('#measure-plane .spinner-border').attr('hidden', false);
+                $.get(url="{% url 'measure_target' collection='Inspection' group='Surface points' name=' ' target_type='smr' %}", success=function(data) {
+                    point_count = point_count + 1
+                    $('#point-count').text(point_count);
+                    $('#measure-plane img').attr('hidden', false);
+                    $('#measure-plane .spinner-border').attr('hidden', true);
+                });
+        };
+      });
+
+      $('#measure-h001').on('click', function(e) {
+        $('#measure-h001 img').attr('hidden', true);
+        $('#measure-h001 .spinner-border').attr('hidden', false);
+        $.get(url="{% url 'run_subroutine' col_mp_name='Template::H001 measurement.mp' %}", success=function(data) {
+            if (data === 'True') {
+                $('#manual_alignment_modal').modal('hide');
+                countdown_auto_alignment();
+                $.get(url="{% url 'close_ovc' %}", success=function(data) {
+                    $.get(url="{% url 'auto_alignment' %}", success=function(data) {
+                        $('#description-auto').attr('hidden', true);
+                        $('#auto-alignment').addClass('complete');
+                        $('#description-inspection').attr('hidden', false);
+                        <!--               Automatic inspection                 -->
+                        check_and_recconnect_instrument();
+                    });
+                });
+            } else {
+                $('#measure-h001 img').attr('hidden', false);
+                $('#measure-h001 .spinner-border').attr('hidden', true);
+                $('#measure-h001-fail').attr('hidden', false);
+            };
+        });
+      });
+
+      $('#measure-plane').on('click', function(e) {
+        if (point_count >= 120) {
+            $('#description-manual-inspection').attr('hidden', true);
+            $('#manual-inspection').addClass('complete');
+            $.get(url="{% url 'analysis' num_dim=num_dim %}", success=function(data) {
+                $.get(url="{% url 'close_ovc' %}", success=function(data) {});
+                <!--          Inspection_results                         -->
+                const data_json = JSON.parse(data);
+                if (data_json['result'] === true) {
+                    var inspection_result = data_json['dimensions'];
+                    <!--     Fill in inspection results           -->
+                    fill_results(inspection_result);
+
+                    $('#stop').attr('hidden', true);
+                    $('#repeat-inspection').attr('hidden', false);
+                } else {
+                    alert('Ooops something went wrong during data analysis. Please restart and try again');
+                };
+            });
+        };
+      });
+      <!--  Pop-up with preview    -->
+      let popUpWindow = null;
+      $('#report').on('click', function(e) {
+          e.preventDefault();
+          $.get(url="{% url 'generate_report' form_pk=form_pk %}", success=function(data) {
+            const windowFeatures = "left=100, top=100, width=1700, height=880, location=no";
+            if (popUpWindow === null) {
+                popUpWindow = window.open('http://127.0.0.1:8000/static/' + data, 'reportPreview', windowFeatures, 'popup');
+                popUpWindow.focus();
+            };
+          });
+
+          $('#spinner').attr('hidden', false);
+          $('#generate-report').attr('hidden', true);
+      });
+
+      $(window).on('beforeunload', function(e) {
+          popUpWindow.close();
+      });
+    </script>
+{% endblock %}

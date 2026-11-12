@@ -1,5 +1,7 @@
 body {
-    background-color: #EAEAEA;
+    background: #F3F3F7;
+    background: linear-gradient(136deg,rgba(235, 245, 248, 1) 0%, rgba(255, 255, 255, 1) 100%);
+
     margin: 0px;
 
     height: 100vh;
@@ -7,8 +9,12 @@ body {
 }
 
 .navbar {
-    background-color: #EAEAEA !important;
+    background-color: rgb(248,248,248) !important;
     padding-top: 0px;
+
+    border-bottom: solid;
+    border-width: 2px;
+    border-color: rgb(230,230,230);
 }
 
 #navbarNavAltMarkup {
@@ -26,13 +32,21 @@ body {
     align-items: center;
     margin-left: 10px;
     margin-right: 10px;
+
+    border-style: solid;
+    border-color: rgb(230,230,230);
+    border-width: 3px;
+    border-radius: 30px;
+
+    background: linear-gradient(90deg,rgba(243, 243, 247, 1) 100%, rgba(249, 248, 250, 1) 0%);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 4px 0 rgba(0, 0, 0, 0.19);
 }
 
 .nav-buttons span {
     padding: 5px;
     white-space: nowrap;
     font-size: 20px;
-    color: blue;
+    color: black;
 }
 
 .nav-buttons a img {

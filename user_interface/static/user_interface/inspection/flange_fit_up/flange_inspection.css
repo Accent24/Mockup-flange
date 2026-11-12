@@ -1,0 +1,111 @@
+main h1 {
+   text-align: center;
+   padding: 5px;
+   margin: 5px;
+}
+
+h2 {
+    padding: 5px;
+}
+
+ul {
+    list-style: none;
+}
+
+ul .row {
+    width: 100%;
+    font-size: 27px;
+    text-align: left;
+
+
+    padding: 8px;
+    margin: 5px;
+
+    border: solid;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-radius: 15px;
+
+    border-width: 1px;
+
+}
+
+.complete {
+    text-decoration: line-through;
+    background-color: #0FFC5390;
+
+}
+
+.spinner-border {
+    margin-right: 10px;
+    --bs-spinner-width: 1.5rem;
+    --bs-spinner-height: 1.5rem;
+}
+
+.description {
+    padding: 5px;
+
+    text-align: center;
+    align-items: center;
+    font-size: 22px;
+
+    border: solid;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+
+    border-width: 1px;
+    border-radius: 15px;
+}
+
+li button {
+    background: none;
+    border: none;
+}
+
+.overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.overview img {
+    width: 40vh;
+}
+
+.table {
+    font-size: 15px;
+    width: 80%;
+}
+
+.table>:not(caption)>*>* {
+    padding: 5px; !important
+}
+
+ol {
+    margin-bottom: 10px !important;
+    text-align: left;
+}
+
+#measure-h001 {
+    background: none;
+    border: none;
+}
+
+.align-button {
+    justify-content: center !important;
+}
+
+#measure-h001 {
+    margin: 10px;
+}
+
+#measure-h001 span {
+    color: red;
+    padding: 2px;
+}
+
+.left {
+    margin-left: 230px !important;
+}
